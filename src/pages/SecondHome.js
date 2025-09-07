@@ -75,7 +75,6 @@ export default function SecondHome() {
                 alt={currentFeatured.title || "N/A"}
                 className="featured-img"
                 onClick={() => currentFeatured.id && navigate(`/anime/${currentFeatured.id}`)}
-                style={{ cursor: "pointer" }}
               />
               <div className="featured-details">
                 <h3>{currentFeatured.title || "N/A"}</h3>
@@ -98,31 +97,36 @@ export default function SecondHome() {
         </section>
       )}
 
+      {/* ===== Separator ===== */}
+      <div className="section-separator"></div>
+
       {/* ===== Top Trends Section ===== */}
       <section className="trends">
         <h2 className="section-title">Top Trends Today</h2>
         {trends.length === 0 ? (
           <p>No trends available.</p>
         ) : (
-          <div className="trends-row">
-            {trends.map((anime) => (
-              <div
-                key={anime.id}
-                className="trend-card"
-                onClick={() => anime.id && navigate(`/anime/${anime.id}`)}
-                style={{ cursor: "pointer" }}
-              >
-                <img
-                  src={anime.imageBase64 || "https://via.placeholder.com/120"}
-                  alt={anime.title || "N/A"}
-                  className="trend-img"
-                />
-                <div className="trend-info">
-                  <p className="trend-title">{anime.title || "N/A"}</p>
-                  <p className="trend-genre">{anime.genre || "N/A"}</p>
+          <div className="trends-container">
+            <div className="trends-row">
+              {trends.map((anime, index) => (
+                <div
+                  key={anime.id}
+                  className="trend-card"
+                  onClick={() => anime.id && navigate(`/anime/${anime.id}`)}
+                >
+                  <div className="trend-number">#{index + 1}</div>
+                  <img
+                    src={anime.imageBase64 || "https://via.placeholder.com/120"}
+                    alt={anime.title || "N/A"}
+                    className="trend-img"
+                  />
+                  <div className="trend-info">
+                    <p className="trend-title">{anime.title || "N/A"}</p>
+                    <p className="trend-genre">{anime.genre || "N/A"}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </section>

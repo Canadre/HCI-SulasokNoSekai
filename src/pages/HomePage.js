@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Search, Menu, User, Bell, ChevronLeft, ChevronDown, ChevronRight, 
+  Search, Menu, User, ChevronLeft, ChevronDown, ChevronRight, 
   Home, TrendingUp, Calendar
 } from 'lucide-react';
 import './HomePage.css';
-
+import AdvancePage from './AdvancePage';
 import SecondHome from './SecondHome';
 import GenrePage from './GenrePage';
 
@@ -17,7 +17,7 @@ const Homepage = () => {
   const [suggestions, setSuggestions] = useState([]);   // 👈 search suggestions
   const [allTitles, setAllTitles] = useState([]);       // 👈 cache Firestore titles
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
   const [isWatchAnimeDropdownOpen, setIsWatchAnimeDropdownOpen] = useState(false);
@@ -46,18 +46,14 @@ const Homepage = () => {
     { name: 'Adventure', color: '#4ecdc4' },
     { name: 'Comedy', color: '#96ceb4' },
     { name: 'Drama', color: '#fdcb6e' },
-    { name: 'Ecchi', color: '#6c5ce7' },
     { name: 'Fantasy', color: '#a29bfe' },
-    { name: 'Horror', color: '#ff4757' },
-    { name: 'Music', color: '#57606f' },
+    { name: 'Horror', color: '#ff4757' }, 
     { name: 'Mystery', color: '#5352ed' },
     { name: 'Romance', color: '#ff3838' },
     { name: 'School', color: '#18dcff' },
     { name: 'Sci-Fi', color: '#7bed9f' },
     { name: 'Slice of Life', color: '#70a1ff' },
-    { name: 'Sports', color: '#ff6348' },
-    { name: 'Supernatural', color: '#2ed573' },
-    { name: 'Thriller', color: '#ff4757' }
+    { name: 'Sports', color: '#ff6348' }
   ];
 
   // ✅ Fetch titles once from Firestore
@@ -100,6 +96,11 @@ const Homepage = () => {
 
   return (
     <div className="homepage">
+      {/* Animated Background */}
+      <div className="background-container">
+        <div className="gradient-bg"></div>
+      </div>
+
       {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
@@ -117,12 +118,15 @@ const Homepage = () => {
         </div>
 
         <div className="sidebar-content">
-          <div className="community-section">
-            <div className="community-button">
-              <span className="community-icon">💬</span>
-              <span>Community</span>
-            </div>
-          </div>
+          <div className="advance-search-button-section">
+  <button 
+    className="advance-search-button"
+    onClick={() => setActivePage('advance-search')}
+  >
+    <span className="advance-search-icon">🔍</span>
+    <span>Advance Search</span>
+  </button>
+</div>
 
           <nav className="sidebar-nav">
             {menuItems.map((item, index) => {
@@ -214,7 +218,7 @@ const Homepage = () => {
             >
               <Menu />
             </button>
-            <h1>SULASOK NO SEKAI</h1>
+            <h1>DOWN ANIVERSE</h1>
           </div>
          
           <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
@@ -231,38 +235,27 @@ const Homepage = () => {
               {/* ✅ Suggestions Overlay */}
               {suggestions.length > 0 && (
                 <ul className="search-suggestions">
-  {suggestions.map((title, idx) => (
-    <li 
-      key={idx} 
-      onClick={() => {
-        setSearchQuery(title);
-        setSuggestions([]);
-      }}
-    >
-      "{title}"
-    </li>
-  ))}
-</ul>
+                  {suggestions.map((title, idx) => (
+                    <li 
+                      key={idx} 
+                      onClick={() => {
+                        setSearchQuery(title);
+                        setSuggestions([]);
+                      }}
+                    >
+                      {title}
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
            
             <div className="nav-actions">
-              <button className="nav-btn" aria-label="Notifications">
-                <Bell />
-              </button>
               <button className="nav-btn" aria-label="Profile">
                 <User />
               </button>
             </div>
           </div>
-
-          <button
-            className="menu-toggle"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <Menu />
-          </button>
         </div>
       </nav>
 
@@ -270,18 +263,34 @@ const Homepage = () => {
       <SecondHome />
 
       {/* Overlay Page */}
-      {activePage && (
-        <div className="overlay-page">
-          {activePage === 'genre' ? (
-            <GenrePage genre={selectedGenre} />
-          ) : (
-            <div className="placeholder-content">
-              <h1>{activePage}</h1>
-              <p>Page under construction...</p>
-            </div>
-          )}
-        </div>
-      )}
+{activePage && (
+  <div className="overlay-page">
+    <div className="overlay-header">
+      <h2>
+        {activePage === 'genre' ? `${selectedGenre} Anime` : 
+         activePage === 'advance-search' ? 'Advanced Search' : 
+         activePage}
+      </h2>
+      <button 
+        className="close-overlay"
+        onClick={() => setActivePage(null)}
+      >
+        Close
+      </button>
+    </div>
+    
+    {activePage === 'genre' ? (
+      <GenrePage genre={selectedGenre} />
+    ) : activePage === 'advance-search' ? (
+      <AdvancePage />
+    ) : (
+      <div className="placeholder-content">
+        <h1>{activePage}</h1>
+        <p>Page under construction...</p>
+      </div>
+    )}
+  </div>
+)}
     </div>
   );
 };
