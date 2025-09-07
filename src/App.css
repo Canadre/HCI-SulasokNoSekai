@@ -385,7 +385,8 @@
 
 .overlay-content {
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px); 
   padding: 1rem 1.5rem;
   border-radius: 0.5rem;
 }

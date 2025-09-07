@@ -1,0 +1,16 @@
+.genre-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh; /* Center vertically */
+  text-align: center;
+  color: #2e1c46;
+}
+
+.placeholder-text {
+  font-size: 48px;
+  font-weight: bold;
+  color: #2e1c46;
+}
+
+        

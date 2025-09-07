@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, User, Bell, ChevronLeft, ChevronDown, ChevronRight, Home, TrendingUp, Calendar, Play, Star, Users, BookOpen } from 'lucide-react';
+import { 
+  Search, Menu, User, Bell, ChevronLeft, ChevronDown, ChevronRight, 
+  Home, TrendingUp, Calendar
+} from 'lucide-react';
 import './HomePage.css';
+
+import SecondHome from './SecondHome';
+import GenrePage from './GenrePage';
+
+// Firestore imports
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 const Homepage = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);   // 👈 search suggestions
+  const [allTitles, setAllTitles] = useState([]);       // 👈 cache Firestore titles
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
   const [isWatchAnimeDropdownOpen, setIsWatchAnimeDropdownOpen] = useState(false);
-  const [animatedStats, setAnimatedStats] = useState({ anime: 0, users: 0, episodes: 0, genres: 0 });
-  
+
+  // 👇 Overlay states
+  const [activePage, setActivePage] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState(null);
+
   const menuItems = [
     { name: 'Home', path: './home', icon: Home },
     { name: 'Most Popular', path: '/popular', icon: TrendingUp },
@@ -44,53 +60,35 @@ const Homepage = () => {
     { name: 'Thriller', color: '#ff4757' }
   ];
 
-  const featuredContent = [
-    {
-      title: "Latest Episodes",
-      description: "Stay updated with the newest episodes of your favorite anime series, released daily.",
-      icon: Play
-    },
-    {
-      title: "Top Rated",
-      description: "Discover highly-rated anime series and movies loved by our community.",
-      icon: Star
-    },
-    {
-      title: "Community",
-      description: "Join discussions, share reviews, and connect with fellow anime enthusiasts.",
-      icon: Users
-    }
-  ];
-
-  const stats = [
-    { label: 'Anime Series', value: 15000, key: 'anime' },
-    { label: 'Active Users', value: 2500000, key: 'users' },
-    { label: 'Episodes', value: 450000, key: 'episodes' },
-    { label: 'Genres', value: 25, key: 'genres' }
-  ];
-
-  // Animate stats on component mount
+  // ✅ Fetch titles once from Firestore
   useEffect(() => {
-    const animateValue = (start, end, duration, key) => {
-      const range = end - start;
-      const increment = end > start ? 1 : -1;
-      const stepTime = Math.abs(Math.floor(duration / range));
-      
-      let current = start;
-      const timer = setInterval(() => {
-        current += increment * Math.ceil(range / 100);
-        if (current >= end) {
-          current = end;
-          clearInterval(timer);
-        }
-        setAnimatedStats(prev => ({ ...prev, [key]: current }));
-      }, stepTime);
+    const fetchTitles = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "animes"));
+        const titles = querySnapshot.docs.map(doc => doc.data().title || "");
+        setAllTitles(titles);
+      } catch (err) {
+        console.error("Error fetching titles:", err);
+      }
     };
-
-    stats.forEach(stat => {
-      animateValue(0, stat.value, 2000, stat.key);
-    });
+    fetchTitles();
   }, []);
+
+  // ✅ Handle search + filter
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim() === "") {
+      setSuggestions([]);
+      return;
+    }
+
+    const filtered = allTitles.filter((title) =>
+      title.toLowerCase().includes(query.toLowerCase())
+    );
+    setSuggestions(filtered.slice(0, 10)); // limit results
+  };
 
   const toggleGenreDropdown = () => {
     setIsGenreDropdownOpen(!isGenreDropdownOpen);
@@ -100,34 +98,17 @@ const Homepage = () => {
     setIsWatchAnimeDropdownOpen(!isWatchAnimeDropdownOpen);
   };
 
-  const formatNumber = (num) => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
-    }
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
-    }
-    return num.toLocaleString();
-  };
-
   return (
     <div className="homepage">
-      {/* Background Elements */}
-      <div className="background-container">
-        <div className="gradient-bg"></div>
-        <div className="floating-particles">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="particle"></div>
-          ))}
-        </div>
-      </div>
-
       {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
-          <button 
+          <button
             className="sidebar-close"
-            onClick={() => setIsSidebarOpen(false)}
+            onClick={() => {
+              setIsSidebarOpen(false);
+              setActivePage(null); // also close overlay
+            }}
             aria-label="Close menu"
           >
             <ChevronLeft />
@@ -157,7 +138,7 @@ const Homepage = () => {
 
           {/* Watch Anime Section */}
           <div className="watch-anime-section">
-            <button 
+            <button
               className="watch-anime-toggle"
               onClick={toggleWatchAnimeDropdown}
               aria-expanded={isWatchAnimeDropdownOpen}
@@ -165,22 +146,23 @@ const Homepage = () => {
               <h3 className="watch-anime-title">Watch Anime</h3>
               {isWatchAnimeDropdownOpen ? <ChevronDown /> : <ChevronRight />}
             </button>
-            
+           
             <div className={`watch-anime-dropdown ${isWatchAnimeDropdownOpen ? 'watch-anime-dropdown-open' : ''}`}>
               {watchAnimeItems.map((item, index) => (
-                <a 
+                <button 
                   key={index} 
-                  href={item.path} 
                   className="watch-anime-item"
+                  onClick={() => setActivePage(item.name)}
                 >
                   {item.name}
-                </a>
+                </button>
               ))}
             </div>
           </div>
 
+          {/* Genre Section */}
           <div className="genre-section">
-            <button 
+            <button
               className="genre-toggle"
               onClick={toggleGenreDropdown}
               aria-expanded={isGenreDropdownOpen}
@@ -188,18 +170,21 @@ const Homepage = () => {
               <h3 className="genre-title">Genre</h3>
               {isGenreDropdownOpen ? <ChevronDown /> : <ChevronRight />}
             </button>
-            
+           
             <div className={`genre-dropdown ${isGenreDropdownOpen ? 'genre-dropdown-open' : ''}`}>
               <div className="genre-grid">
                 {genres.map((genre, index) => (
-                  <a 
-                    key={index} 
-                    href={`/genre/${genre.name.toLowerCase().replace(/\s+/g, '-')}`} 
+                  <button
+                    key={index}
                     className="genre-item"
                     style={{ '--genre-color': genre.color }}
+                    onClick={() => {
+                      setSelectedGenre(genre.name);
+                      setActivePage('genre');
+                    }}
                   >
                     {genre.name}
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>
@@ -209,17 +194,20 @@ const Homepage = () => {
 
       {/* Sidebar Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="sidebar-overlay"
-          onClick={() => setIsSidebarOpen(false)}
+          onClick={() => {
+            setIsSidebarOpen(false);
+            setActivePage(null); // also close overlay
+          }}
         ></div>
       )}
 
-      {/* Navigation */}
+      {/* Navbar */}
       <nav className="navbar">
         <div className="nav-container">
           <div className="nav-brand">
-            <button 
+            <button
               className="hamburger-menu"
               onClick={() => setIsSidebarOpen(true)}
               aria-label="Open menu"
@@ -228,7 +216,7 @@ const Homepage = () => {
             </button>
             <h1>SULASOK NO SEKAI</h1>
           </div>
-          
+         
           <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
             <div className="search-container">
               <Search className="search-icon" />
@@ -236,11 +224,28 @@ const Homepage = () => {
                 type="text"
                 placeholder="Search anime, movies..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="search-input"
               />
+
+              {/* ✅ Suggestions Overlay */}
+              {suggestions.length > 0 && (
+                <ul className="search-suggestions">
+  {suggestions.map((title, idx) => (
+    <li 
+      key={idx} 
+      onClick={() => {
+        setSearchQuery(title);
+        setSuggestions([]);
+      }}
+    >
+      "{title}"
+    </li>
+  ))}
+</ul>
+              )}
             </div>
-            
+           
             <div className="nav-actions">
               <button className="nav-btn" aria-label="Notifications">
                 <Bell />
@@ -251,7 +256,7 @@ const Homepage = () => {
             </div>
           </div>
 
-          <button 
+          <button
             className="menu-toggle"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
@@ -261,59 +266,22 @@ const Homepage = () => {
         </div>
       </nav>
 
-      {/* Main Content */}
-      <main className="main-content">
-        <div className="content-container">
-          <h2>Welcome to the Ultimate Anime Experience</h2>
-          <p>
-            Discover thousands of anime series, movies, and OVAs. Join millions of fans 
-            in the most comprehensive anime streaming platform in the universe.
-          </p>
-          
-          <div className="hero-actions">
-            <a href="/watch" className="cta-button cta-primary">
-              <Play size={20} />
-              Start Watching
-            </a>
-            <a href="/browse" className="cta-button">
-              <BookOpen size={20} />
-              Browse Library
-            </a>
-          </div>
+      {/* Homepage Content */}
+      <SecondHome />
 
-          {/* Stats Section */}
-          <div className="stats-section">
-            {stats.map((stat, index) => (
-              <div key={index} className="stat-item">
-                <span className="stat-number">
-                  {formatNumber(animatedStats[stat.key])}
-                </span>
-                <span className="stat-label">{stat.label}</span>
-              </div>
-            ))}
-          </div>
+      {/* Overlay Page */}
+      {activePage && (
+        <div className="overlay-page">
+          {activePage === 'genre' ? (
+            <GenrePage genre={selectedGenre} />
+          ) : (
+            <div className="placeholder-content">
+              <h1>{activePage}</h1>
+              <p>Page under construction...</p>
+            </div>
+          )}
         </div>
-      </main>
-
-      {/* Featured Content Section */}
-      <section className="featured-section">
-        <div className="featured-grid">
-          {featuredContent.map((item, index) => {
-            const IconComponent = item.icon;
-            return (
-              <div key={index} className="featured-card">
-                <IconComponent size={48} style={{ 
-                  marginBottom: '1rem', 
-                  color: '#ff6b9d',
-                  filter: 'drop-shadow(0 0 10px rgba(255, 107, 157, 0.6))'
-                }} />
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      )}
     </div>
   );
 };
