@@ -1,0 +1,342 @@
+/* Exit Modal Overlay */
+.exit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10001;
+  backdrop-filter: blur(8px);
+}
+
+/* Exit Modal Container */
+.exit-modal {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 450px;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: exitModalSlideIn 0.4s ease-out;
+}
+
+@keyframes exitModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal Header */
+.exit-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.exit-modal-header h2 {
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.exit-modal-close {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exit-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.exit-modal-close svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Modal Content */
+.exit-modal-content {
+  padding: 30px 25px;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Exit Icon */
+.exit-icon-container {
+  margin-bottom: 20px;
+}
+
+.exit-icon {
+  width: 60px;
+  height: 60px;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 50%;
+  padding: 15px;
+  animation: exitIconPulse 2s infinite;
+}
+
+@keyframes exitIconPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+/* Exit Message */
+.exit-message h3 {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.exit-message p {
+  color: #cccccc;
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Modal Footer */
+.exit-modal-footer {
+  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.exit-modal-button {
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.exit-modal-button.cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.exit-modal-button.cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.exit-modal-button.confirm {
+  background: linear-gradient(135deg, #ff6b6b, #ff5252);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.exit-modal-button.confirm:hover {
+  background: linear-gradient(135deg, #ff5252, #ff6b6b);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.exit-modal-button:active {
+  transform: translateY(0);
+}
+
+/* Thank You Screen */
+.thank-you-content {
+  padding: 40px 25px;
+}
+
+.thank-you-icon-container {
+  margin-bottom: 25px;
+}
+
+.thank-you-icon {
+  width: 80px;
+  height: 80px;
+  color: #ff6b6b;
+  animation: thankYouHeartBeat 1.5s infinite;
+}
+
+@keyframes thankYouHeartBeat {
+  0%, 50%, 100% {
+    transform: scale(1);
+  }
+  25%, 75% {
+    transform: scale(1.1);
+  }
+}
+
+.thank-you-message h3 {
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.thank-you-message .brand-name {
+  color: #4ecdc4;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 15px 0;
+  text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+  animation: brandGlow 2s infinite alternate;
+}
+
+@keyframes brandGlow {
+  from {
+    text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+  }
+  to {
+    text-shadow: 0 0 30px rgba(78, 205, 196, 0.8);
+  }
+}
+
+.thank-you-message p {
+  color: #cccccc;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* Loading Dots */
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  background: #4ecdc4;
+  border-radius: 50%;
+  animation: loadingDots 1.4s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes loadingDots {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .exit-modal {
+    width: 95%;
+    max-width: 400px;
+  }
+
+  .exit-modal-header {
+    padding: 16px 20px;
+  }
+
+  .exit-modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .exit-modal-content {
+    padding: 25px 20px;
+  }
+
+  .thank-you-content {
+    padding: 35px 20px;
+  }
+
+  .exit-icon {
+    width: 50px;
+    height: 50px;
+    padding: 12px;
+  }
+
+  .thank-you-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .exit-message h3,
+  .thank-you-message h3 {
+    font-size: 1.2rem;
+  }
+
+  .thank-you-message .brand-name {
+    font-size: 1.6rem;
+  }
+
+  .exit-modal-footer {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .exit-modal-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .exit-modal-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .exit-message h3,
+  .thank-you-message h3 {
+    font-size: 1.1rem;
+  }
+
+  .thank-you-message .brand-name {
+    font-size: 1.4rem;
+  }
+
+  .exit-message p,
+  .thank-you-message p {
+    font-size: 0.9rem;
+  }
+}

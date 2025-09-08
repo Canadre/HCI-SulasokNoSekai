@@ -51,38 +51,64 @@ const GenrePage = ({ genre, showAll = false, title, sortOrder = null }) => {
 
   return (
     <div className="genre-page">
-      {loading ? (
-        <p>Loading...</p>
-      ) : animes.length > 0 ? (
-        <div className="anime-grid">
-          {animes.map((anime) => (
-            <div
-              key={anime.id}
-              className="anime-card"
-              onClick={() =>
-                navigate(`/anime/${anime.id}`, {
-                  state: { backgroundLocation: location },
-                })
-              }
-              style={{ cursor: "pointer" }}
-            >
-              <div className="anime-image">
-                <img
-                  src={anime.imageBase64 || "https://via.placeholder.com/120"}
-                  alt={anime.title}
-                />
-              </div>
-              <div className="anime-info">
-                <h3 className="anime-title">{anime.title}</h3>
-              </div>
-            </div>
-          ))}
+      {/* Floating background elements */}
+      <div className="floating-elements">
+        <div className="floating-star"></div>
+        <div className="floating-star"></div>
+        <div className="floating-star"></div>
+      </div>
+
+      <div className="genre-page-container">
+        {/* Header Section */}
+        <div className="genre-header">
+          <h1 className="genre3-title">
+            {title || (genre ? `${genre} Anime` : 'All Anime')}
+          </h1>
+          <p className="genre-subtitle">
+            Discover amazing anime in this collection
+          </p>
         </div>
-      ) : (
-        <div className="no-anime">
-          <img src="/karl.jpg" alt="No Anime" />
-        </div>
-      )}
+
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Loading your anime collection...</p>
+          </div>
+        ) : animes.length > 0 ? (
+          <div className="anime-grid">
+            {animes.map((anime) => (
+              <div
+                key={anime.id}
+                className="anime-card"
+                onClick={() =>
+                  navigate(`/anime/${anime.id}`, {
+                    state: { backgroundLocation: location },
+                  })
+                }
+              >
+                <div className="anime-image">
+                  <img
+                    src={anime.imageBase64 || "https://via.placeholder.com/250x320/2c3e50/ffffff?text=No+Image"}
+                    alt={anime.title}
+                    loading="lazy"
+                  />
+                </div>
+                <div className="anime-info">
+                  <h3 className="anime-title">{anime.title}</h3>
+                  {anime.genre && (
+                    <p className="anime-genre">{anime.genre}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="no-anime">
+            <img src="/karl.jpg" alt="No Anime Found" />
+            <p className="no-anime-text">No anime found in this collection</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

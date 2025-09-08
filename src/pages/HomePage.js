@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, Menu, User, ChevronLeft, ChevronDown, ChevronRight, 
-  Home, TrendingUp, Calendar
+  Home, TrendingUp, Calendar, LogOut, Info
 } from 'lucide-react';
 import './HomePage.css';
 import AdvancePage from './AdvancePage';
 import SecondHome from './SecondHome';
 import GenrePage from './GenrePage';
-import SearchAnime from './SearchAnime'; // ← add this
-// Firestore imports
+import SearchAnime from './SearchAnime'; 
+import AboutPage from './AboutPage';
+import ExitModal from './ExitModal';
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -21,6 +23,12 @@ const Homepage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
   const [isWatchAnimeDropdownOpen, setIsWatchAnimeDropdownOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  
+  // New state for user dropdown
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Overlay states
   const [activePage, setActivePage] = useState(null);
@@ -28,7 +36,6 @@ const Homepage = () => {
   // Overlay sorting state
   const [sortOrder, setSortOrder] = useState(null);
   const [searchResultsQuery, setSearchResultsQuery] = useState('');
-
 
   // Disable background scroll when overlay is active
   useEffect(() => {
@@ -41,6 +48,20 @@ const Homepage = () => {
       document.body.style.overflow = "auto";
     };
   }, [activePage]);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.user-dropdown-container')) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const menuItems = [
     { name: 'Home', path: './home', icon: Home },
@@ -71,6 +92,24 @@ const Homepage = () => {
     { name: 'Slice of Life', color: '#70a1ff' },
     { name: 'Sports', color: '#ff6348' }
   ];
+
+const userDropdownItems = [
+  { 
+    name: 'About', 
+    icon: Info, 
+    action: () => setIsAboutModalOpen(true)
+  },
+  { 
+    name: 'Exit', 
+    icon: LogOut, 
+    action: () => setIsExitModalOpen(true) // Changed this line
+  }
+];
+
+// Add this function to handle the exit action (redirect to SplashPage)
+const handleExit = () => {
+  navigate('/'); // or navigate('/splash') depending on your route
+};
 
   // Fetch anime titles once
   useEffect(() => {
@@ -103,24 +142,24 @@ const Homepage = () => {
 
   const toggleGenreDropdown = () => setIsGenreDropdownOpen(!isGenreDropdownOpen);
   const toggleWatchAnimeDropdown = () => setIsWatchAnimeDropdownOpen(!isWatchAnimeDropdownOpen);
+  const toggleUserDropdown = () => setIsUserDropdownOpen(!isUserDropdownOpen);
 
-const handleSearchSubmit = (e) => {
-  if (e.key === 'Enter' && searchQuery.trim() !== '') {
-    setSearchResultsQuery(searchQuery);
-    setActivePage(`Search result for "${searchQuery}"`); // dynamic title
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim() !== '') {
+      setSearchResultsQuery(searchQuery);
+      setActivePage(`Search result for "${searchQuery}"`);
+      setIsSidebarOpen(true);
+      setSuggestions([]);
+    }
+  };
+
+  const handleSuggestionClick = (title) => {
+    setSearchQuery(title);
+    setSearchResultsQuery(title);
+    setActivePage(`Search result for "${title}"`);
     setIsSidebarOpen(true);
     setSuggestions([]);
-  }
-};
-
-const handleSuggestionClick = (title) => {
-  setSearchQuery(title);
-  setSearchResultsQuery(title);
-  setActivePage(`Search result for "${title}"`); // dynamic title
-  setIsSidebarOpen(true);
-  setSuggestions([]);
-};
-
+  };
 
   return (
     <div className="homepage">
@@ -249,33 +288,58 @@ const handleSuggestionClick = (title) => {
             <div className="search-container">
               <Search className="search-icon" />
               <input
-  type="text"
-  placeholder="Search anime, movies..."
-  value={searchQuery}
-  onChange={handleSearchChange}
-  onKeyDown={handleSearchSubmit}  // ← Add this
-  className="search-input"
-/>
+                type="text"
+                placeholder="Search anime, movies..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchSubmit}
+                className="search-input"
+              />
 
-{suggestions.length > 0 && (
-  <ul className="search-suggestions">
-    {suggestions.map((title, idx) => (
-      <li 
-        key={idx} 
-        onClick={() => handleSuggestionClick(title)} // ← Updated
-      >
-        {title}
-      </li>
-    ))}
-  </ul>
-)}
-
+              {suggestions.length > 0 && (
+                <ul className="search-suggestions">
+                  {suggestions.map((title, idx) => (
+                    <li 
+                      key={idx} 
+                      onClick={() => handleSuggestionClick(title)}
+                    >
+                      {title}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-           
+           {/* Menu Button */}
             <div className="nav-actions">
-              <button className="nav-btn">
-                <User />
-              </button>
+              <div className="user-dropdown-container">
+                <button 
+                  className="nav-btn"
+                  onClick={toggleUserDropdown}
+                  aria-expanded={isUserDropdownOpen}
+                >
+                  <User />
+                </button>
+                
+                {/* User Dropdown Menu(menu button but this is the drop down items like about and exit.) */}
+                <div className={`user-dropdown ${isUserDropdownOpen ? 'user-dropdown-open' : ''}`}>
+                  {userDropdownItems.map((item, idx) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={idx}
+                        className="user-dropdown-item"
+                        onClick={() => {
+                          item.action();
+                          setIsUserDropdownOpen(false);
+                        }}
+                      >
+                        <Icon className="dropdown-item-icon" />
+                        <span>{item.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -284,61 +348,71 @@ const handleSuggestionClick = (title) => {
       {/* Homepage Content */}
       <SecondHome />
 
-     {/* Overlay Page */}
-{activePage && (
-  <div className="overlay-page">
-    <div className="overlay-header">
-      <h2>
-        {activePage === 'genre'
-          ? `${selectedGenre} Anime`
-          : activePage === 'advance-search'
-          ? 'Advanced Search'
-          : activePage}
-      </h2>
+      {/* Overlay Page */}
+      {activePage && (
+        <div className="overlay-page">
+          <div className="overlay-header">
+            <h2>
+              {activePage === 'genre'
+                ? `${selectedGenre} Anime`
+                : activePage === 'advance-search'
+                ? 'Advanced Search'
+                : activePage}
+            </h2>
 
-      {/* Right-side buttons */}
-      <div className="overlay-header-buttons">
-  {activePage !== 'advance-search' && !activePage?.startsWith('Search result for') && (
-  <button
-    className="filter-button"
-    onClick={() => setSortOrder(prev => (prev === "asc" ? "desc" : "asc"))}
-    title="Filter / Sort"
-  >
-    {sortOrder === "asc" ? " A→Z" : " Z→A"}
-  </button>
-)}
+            {/* Right-side buttons */}
+            <div className="overlay-header-buttons">
+              {activePage !== 'advance-search' && !activePage?.startsWith('Search result for') && (
+                <button
+                  className="filter-button"
+                  onClick={() => setSortOrder(prev => (prev === "asc" ? "desc" : "asc"))}
+                  title="Filter / Sort"
+                >
+                  {sortOrder === "asc" ? " A→Z" : " Z→A"}
+                </button>
+              )}
 
+              <button 
+                className="close-overlay"
+                onClick={() => setActivePage(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
 
-  <button 
-    className="close-overlay"
-    onClick={() => setActivePage(null)}
-  >
-    Close
-  </button>
-</div>
-
-      </div>
-
-     {activePage === 'genre' ? (
-  <GenrePage genre={selectedGenre} sortOrder={sortOrder} />
-) : activePage === 'Subbed Anime' ? (
-  <GenrePage showAll={true} title="Subbed Anime" sortOrder={sortOrder} />
-) : activePage === 'Dubbed Anime' ? (
-  <GenrePage showAll={true} title="Dubbed Anime" sortOrder={sortOrder} />
-) : activePage === 'advance-search' ? (
-  <AdvancePage />
-) : activePage?.startsWith('Search result for') ? (
-  <SearchAnime query={searchResultsQuery} />
-) : (
-  <div className="placeholder-content">
-    <h1>{activePage}</h1>
-    <p>Page under construction...</p>
-  </div>
-)}
-
-
+          {activePage === 'genre' ? (
+            <GenrePage genre={selectedGenre} sortOrder={sortOrder} />
+          ) : activePage === 'Subbed Anime' ? (
+            <GenrePage showAll={true} title="Subbed Anime" sortOrder={sortOrder} />
+          ) : activePage === 'Dubbed Anime' ? (
+            <GenrePage showAll={true} title="Dubbed Anime" sortOrder={sortOrder} />
+          ) : activePage === 'advance-search' ? (
+            <AdvancePage />
+          ) : activePage?.startsWith('Search result for') ? (
+            <SearchAnime query={searchResultsQuery} />
+          ) : (
+            <div className="placeholder-content">
+              <h1>{activePage}</h1>
+              <p>Page under construction...</p>
+            </div>
+          )}
         </div>
       )}
+
+      {/* About Modal */}
+<AboutPage 
+  isOpen={isAboutModalOpen} 
+  onClose={() => setIsAboutModalOpen(false)} 
+/>
+
+{/* Exit Modal */}
+<ExitModal 
+  isOpen={isExitModalOpen} 
+  onClose={() => setIsExitModalOpen(false)}
+  onExit={handleExit}
+/>
+
     </div>
   );
 };

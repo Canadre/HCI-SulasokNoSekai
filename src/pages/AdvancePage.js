@@ -157,7 +157,7 @@ const AdvancePage = () => {
         </div>
 
         <div className="genre-section">
-          <h3 className="genre-title">Genre</h3>
+          <h3 className="genre2-title">Genre</h3>
           <div className="genre-dropdown">
             <select 
               value={filters.genre}

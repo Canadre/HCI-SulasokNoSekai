@@ -1,8 +1,5 @@
-/* ==================== ENHANCED ANIME STREAMING SITE CSS ==================== */
-
-/* CSS Custom Properties for consistent theming */
 :root {
-  /* Color Palette */
+  /*culors */
   --primary-dark: #0a0a0f;
   --secondary-dark: #1a1a2e;
   --tertiary-dark: #16213e;
@@ -18,7 +15,7 @@
   --dark-slate: #2d3748;
   --medium-slate: #4a5568;
   
-  /* Gradients */
+  /*Gradients */
   --primary-gradient: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
    --accent-gradient: linear-gradient(135deg, #2d3748 0%, #a0d4a0 80%, #556844 400px);
    --accent-bradient: linear-gradient(135deg, #3a6952 0%, #a0d4a0 80%, #556844 400px);
@@ -27,12 +24,12 @@
   --card-gradient: linear-gradient(145deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.7));
   --glass-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   
-  /* Glass Morphism */
+  /*Glass Morphism epek */
   --glass-bg: rgba(26, 26, 46, 0.3);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   
-  /* Text Colors */
+  /*Text Colors */
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.8);
   --text-muted: rgba(255, 255, 255, 0.6);
@@ -46,24 +43,24 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
   
-  /* Border Radius */
+  /*Border Radius*/
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-xl: 30px;
   
-  /* Transitions */
+  /*transition ng mga functions*/
   --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   
-  /* Sidebar */
+  /*kulay ng sidebar*/
   --sidebar-width: 320px;
   --sidebar-bg: rgba(15, 15, 35, 0.95);
 }
 
-/* ==================== GLOBAL RESET & BASE STYLES ==================== */
+/*kapag nirereload ang page*/
 * {
   margin: 0;
   padding: 0;
@@ -88,7 +85,7 @@ body {
   position: relative;
 }
 
-/* ==================== ANIMATED BACKGROUND ==================== */
+/*background ng buong page*/
 .background-container {
   position: fixed;
   top: 0;
@@ -107,7 +104,6 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--primary-gradient);
   z-index: -1;
 }
 
@@ -118,9 +114,9 @@ body {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 40% 60%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 20%, rgba(38, 120, 70, 0.492) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(32, 71, 133, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(33, 148, 87, 0.427) 0%, transparent 50%);
   animation: gradientShift 15s ease-in-out infinite;
 }
 
@@ -129,7 +125,7 @@ body {
   50% { opacity: 0.8; transform: scale(1.1) rotate(180deg); }
 }
 
-/* Floating particles */
+/*design daw*/
 .background-container::after {
   content: '';
   position: absolute;
@@ -149,7 +145,7 @@ body {
   100% { transform: translateY(-100vh) translateX(50px); }
 }
 
-/* ==================== ENHANCED SIDEBAR ==================== */
+/*side bar sa gedli*/
 
 .sidebar {
   position: fixed;
@@ -167,7 +163,6 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   
-  /* Custom Scrollbar */
   scrollbar-width: thin;
   scrollbar-color: var(--accent-purple) transparent;
 }
@@ -251,7 +246,7 @@ body {
   padding: var(--spacing-lg) 0;
 }
 
-/* ==================== UPDATED ADVANCED SEARCH BUTTON ==================== */
+/*design ng advance search*/
 .advance-search-button-section {
   padding: 0 var(--spacing-xl) var(--spacing-lg) var(--spacing-xl);
   margin-bottom: var(--spacing-lg);
@@ -290,7 +285,6 @@ body {
 }
 
 .advance-search-button:hover {
-  /* Removed border-image */
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 10px 30px rgba(160, 212, 160, 0.2);
 }
@@ -309,7 +303,7 @@ body {
   50% { transform: scale(1.1); }
 }
 
-/* ==================== ENHANCED NAVIGATION ==================== */
+/*navigation sa gedli*/
 .sidebar-nav {
   padding: 0 var(--spacing-xl);
   padding-bottom: 16px;
@@ -369,7 +363,7 @@ body {
   color: var(--neon-green);
 }
 
-/* ==================== DROPDOWN SECTIONS ==================== */
+/*eto yung laman ng genre*/
 .watch-anime-section,
 .genre-section {
   padding: 0 var(--spacing-xl);
@@ -439,7 +433,7 @@ body {
   background-clip: text;
 }
 
-/* Dropdown Content */
+/*eto ay dropdown menu*/
 .watch-anime-dropdown,
 .genre-dropdown {
   max-height: 0;
@@ -495,7 +489,7 @@ body {
   left: 0;
 }
 
-/* Genre Grid */
+/*genre to*/
 .genre-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -550,7 +544,7 @@ body {
   opacity: 0.3;
 }
 
-/* ==================== ENHANCED NAVBAR ==================== */
+/*navigation sa taas*/
 .navbar {
   position: fixed;
   top: 0;
@@ -625,7 +619,7 @@ body {
   gap: var(--spacing-xl);
 }
 
-/* ==================== ENHANCED SEARCH ==================== */
+/* this is the search bar*/
 .search-container {
   position: relative;
   display: flex;
@@ -724,7 +718,7 @@ body {
   margin-bottom: 0;
 }
 
-/* ==================== NAVIGATION ACTIONS ==================== */
+/*menu button*/
 .nav-actions {
   display: flex;
   gap: var(--spacing-md);
@@ -779,6 +773,153 @@ body {
   transform: scale(1.1);
 }
 
+/* User Dropdown Styles - Updated with green left border hover */
+
+.user-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  height: 105px;
+  width: 235px;
+  background: #1a1a2e;
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(123, 226, 171, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  overflow: hidden;
+} 
+
+.user-dropdown-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.user-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--glass-border);
+}
+
+.user-dropdown::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--glass-bg);
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 230px;
+  height: 50px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+  border-left: 3px solid transparent;
+}
+
+.user-dropdown-item:hover {
+color: var(--text-primary);
+  transform: translateX(2px) scale(1.02);
+  background: #252e3cdc;
+  backdrop-filter: blur(10px);
+  border-left: 3px solid var(--neon-green);
+  box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+}
+
+.user-dropdown-item:hover::before {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+.user-dropdown-item:first-child {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.user-dropdown-item:last-child {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.dropdown-item-icon {
+  width: 16px;
+  height: 16px;
+  transition: all 0.3s ease;
+}
+
+.user-dropdown-item:hover .dropdown-item-icon {
+  transform: scale(1.0);
+  color: #4ade80; /* Green icon color on hover */
+}
+
+/* Animation for dropdown appearance */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.user-dropdown-open {
+  animation: dropdownFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .user-dropdown {
+    right: -10px;
+    min-width: 160px;
+  }
+  
+  .user-dropdown::before,
+  .user-dropdown::after {
+    right: 15px;
+  }
+}
+
+/* Optional: Add a subtle glow effect */
+.user-dropdown-open {
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(74, 222, 128, 0.2); /* Green glow */
+}
+
 /* ==================== OVERLAY PAGE ==================== */
 .overlay-page {
   position: fixed;
@@ -793,6 +934,8 @@ body {
   backdrop-filter: blur(20px);
   border-left: 2px solid;
   border-image: var(--neon-gradient) 1;
+  border-bottom: #449f68c3;
+  border-radius: 2px;
   animation: overlaySlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
