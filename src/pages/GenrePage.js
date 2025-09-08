@@ -22,16 +22,28 @@ const GenrePage = ({ genre, showAll = false, title, sortOrder = null }) => {
           ...doc.data(),
         }));
 
-        // Filter by genre if needed
+        // ✅ Fix: Proper genre filtering with includes()
         if (!showAll && genre) {
-          animeData = animeData.filter(
-            (anime) =>
-              anime.genre &&
-              anime.genre.toLowerCase().includes(genre.toLowerCase())
-          );
+          animeData = animeData.filter((anime) => {
+            if (!anime.genre) return false;
+
+            // If genre is an array
+            if (Array.isArray(anime.genre)) {
+              return anime.genre.some((g) =>
+                g.toLowerCase().includes(genre.toLowerCase())
+              );
+            }
+
+            // If genre is a string (comma-separated or single)
+            return anime.genre
+              .toLowerCase()
+              .split(",")
+              .map((g) => g.trim())
+              .some((g) => g.includes(genre.toLowerCase()));
+          });
         }
 
-        // Sort only if sortOrder is provided
+        // ✅ Sorting
         if (sortOrder === "asc") {
           animeData.sort((a, b) => a.title.localeCompare(b.title));
         } else if (sortOrder === "desc") {
@@ -47,7 +59,7 @@ const GenrePage = ({ genre, showAll = false, title, sortOrder = null }) => {
     };
 
     fetchAnimes();
-  }, [genre, showAll, sortOrder]); // sortOrder optional
+  }, [genre, showAll, sortOrder]);
 
   return (
     <div className="genre-page">
@@ -62,7 +74,7 @@ const GenrePage = ({ genre, showAll = false, title, sortOrder = null }) => {
         {/* Header Section */}
         <div className="genre-header">
           <h1 className="genre3-title">
-            {title || (genre ? `${genre} Anime` : 'All Anime')}
+            {title || (genre ? `${genre} Anime` : "All Anime")}
           </h1>
           <p className="genre-subtitle">
             Discover amazing anime in this collection
@@ -88,7 +100,10 @@ const GenrePage = ({ genre, showAll = false, title, sortOrder = null }) => {
               >
                 <div className="anime-image">
                   <img
-                    src={anime.imageBase64 || "https://via.placeholder.com/250x320/2c3e50/ffffff?text=No+Image"}
+                    src={
+                      anime.imageBase64 ||
+                      "https://via.placeholder.com/250x320/2c3e50/ffffff?text=No+Image"
+                    }
                     alt={anime.title}
                     loading="lazy"
                   />
@@ -96,7 +111,11 @@ const GenrePage = ({ genre, showAll = false, title, sortOrder = null }) => {
                 <div className="anime-info">
                   <h3 className="anime-title">{anime.title}</h3>
                   {anime.genre && (
-                    <p className="anime-genre">{anime.genre}</p>
+                    <p className="anime-genre">
+                      {Array.isArray(anime.genre)
+                        ? anime.genre.join(", ")
+                        : anime.genre}
+                    </p>
                   )}
                 </div>
               </div>

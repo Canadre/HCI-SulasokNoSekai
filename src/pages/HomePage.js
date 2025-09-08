@@ -11,6 +11,11 @@ import GenrePage from './GenrePage';
 import SearchAnime from './SearchAnime'; 
 import AboutPage from './AboutPage';
 import ExitModal from './ExitModal';
+import EventsModal from './EventsModal';
+import TvSeriesModal from './TvSeriesModal';
+import MoviesModal from './MoviesModal';
+import PopularAnime from './PopularAnime'; // ✅ gagamitin na natin
+
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -25,15 +30,15 @@ const Homepage = () => {
   const [isWatchAnimeDropdownOpen, setIsWatchAnimeDropdownOpen] = useState(false);
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const [isEventsModalOpen, setIsEventsModalOpen] = useState(false);
+  const [isTvSeriesModalOpen, setIsTvSeriesModalOpen] = useState(false);
+  const [isMoviesModalOpen, setIsMoviesModalOpen] = useState(false);
   
-  // New state for user dropdown
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Overlay states
   const [activePage, setActivePage] = useState(null);
   const [selectedGenre, setSelectedGenre] = useState(null);
-  // Overlay sorting state
   const [sortOrder, setSortOrder] = useState(null);
   const [searchResultsQuery, setSearchResultsQuery] = useState('');
 
@@ -63,19 +68,28 @@ const Homepage = () => {
     };
   }, []);
 
+  // Sidebar menu items
   const menuItems = [
     { name: 'Home', path: './home', icon: Home },
-    { name: 'Most Popular', path: '/popular', icon: TrendingUp },
-    { name: 'Events', path: '/events', icon: Calendar }
+    { 
+      name: 'Most Popular', 
+      path: '#', 
+      icon: TrendingUp, 
+      onClick: () => setActivePage('popular') // 🔥 overlay like Genre
+    },
+    { 
+      name: 'Events', 
+      path: '#', 
+      icon: Calendar, 
+      onClick: () => setIsEventsModalOpen(true)
+    }
   ];
 
   const watchAnimeItems = [
     { name: 'Subbed Anime', path: '/subbed' },
     { name: 'Dubbed Anime', path: '/dubbed' },
-    { name: 'Movies', path: '/movies' },
-    { name: 'TV Series', path: '/tv-series' },
-    { name: 'OVAs', path: '/ovas' },
-    { name: 'Specials', path: '/specials' }
+    { name: 'Movies', path: '#', onClick: () => setIsMoviesModalOpen(true) },
+    { name: 'TV Series', path: '#', onClick: () => setIsTvSeriesModalOpen(true) }
   ];
 
   const genres = [
@@ -93,25 +107,16 @@ const Homepage = () => {
     { name: 'Sports', color: '#ff6348' }
   ];
 
-const userDropdownItems = [
-  { 
-    name: 'About', 
-    icon: Info, 
-    action: () => setIsAboutModalOpen(true)
-  },
-  { 
-    name: 'Exit', 
-    icon: LogOut, 
-    action: () => setIsExitModalOpen(true) // Changed this line
-  }
-];
+  const userDropdownItems = [
+    { name: 'About', icon: Info, action: () => setIsAboutModalOpen(true) },
+    { name: 'Exit', icon: LogOut, action: () => setIsExitModalOpen(true) }
+  ];
 
-// Add this function to handle the exit action (redirect to SplashPage)
-const handleExit = () => {
-  navigate('/'); // or navigate('/splash') depending on your route
-};
+  const handleExit = () => {
+    navigate('/');
+  };
 
-  // Fetch anime titles once
+  // Fetch anime titles for search
   useEffect(() => {
     const fetchTitles = async () => {
       try {
@@ -163,7 +168,7 @@ const handleExit = () => {
 
   return (
     <div className="homepage">
-      {/* Animated Background */}
+      {/* Background */}
       <div className="background-container">
         <div className="gradient-bg"></div>
       </div>
@@ -198,7 +203,17 @@ const handleExit = () => {
             {menuItems.map((item, idx) => {
               const Icon = item.icon;
               return (
-                <a key={idx} href={item.path} className="sidebar-nav-item">
+                <a 
+                  key={idx} 
+                  href={item.path} 
+                  className="sidebar-nav-item"
+                  onClick={(e) => {
+                    if (item.onClick) {
+                      e.preventDefault();
+                      item.onClick();
+                    }
+                  }}
+                >
                   <Icon className="nav-item-icon" />
                   <span>{item.name}</span>
                 </a>
@@ -221,7 +236,13 @@ const handleExit = () => {
                 <button 
                   key={idx} 
                   className="watch-anime-item"
-                  onClick={() => setActivePage(item.name)}
+                  onClick={() => {
+                    if (item.onClick) {
+                      item.onClick();
+                    } else {
+                      setActivePage(item.name);
+                    }
+                  }}
                 >
                   {item.name}
                 </button>
@@ -309,7 +330,8 @@ const handleExit = () => {
                 </ul>
               )}
             </div>
-           {/* Menu Button */}
+
+            {/* User Dropdown */}
             <div className="nav-actions">
               <div className="user-dropdown-container">
                 <button 
@@ -319,8 +341,6 @@ const handleExit = () => {
                 >
                   <User />
                 </button>
-                
-                {/* User Dropdown Menu(menu button but this is the drop down items like about and exit.) */}
                 <div className={`user-dropdown ${isUserDropdownOpen ? 'user-dropdown-open' : ''}`}>
                   {userDropdownItems.map((item, idx) => {
                     const Icon = item.icon;
@@ -355,12 +375,13 @@ const handleExit = () => {
             <h2>
               {activePage === 'genre'
                 ? `${selectedGenre} Anime`
+                : activePage === 'popular'
+                ? 'Most Popular Anime'
                 : activePage === 'advance-search'
                 ? 'Advanced Search'
                 : activePage}
             </h2>
 
-            {/* Right-side buttons */}
             <div className="overlay-header-buttons">
               {activePage !== 'advance-search' && !activePage?.startsWith('Search result for') && (
                 <button
@@ -381,37 +402,54 @@ const handleExit = () => {
             </div>
           </div>
 
-          {activePage === 'genre' ? (
-            <GenrePage genre={selectedGenre} sortOrder={sortOrder} />
-          ) : activePage === 'Subbed Anime' ? (
-            <GenrePage showAll={true} title="Subbed Anime" sortOrder={sortOrder} />
-          ) : activePage === 'Dubbed Anime' ? (
-            <GenrePage showAll={true} title="Dubbed Anime" sortOrder={sortOrder} />
-          ) : activePage === 'advance-search' ? (
-            <AdvancePage />
-          ) : activePage?.startsWith('Search result for') ? (
-            <SearchAnime query={searchResultsQuery} />
-          ) : (
-            <div className="placeholder-content">
-              <h1>{activePage}</h1>
-              <p>Page under construction...</p>
-            </div>
-          )}
+          {activePage === 'popular' ? (
+  <PopularAnime />  
+) : activePage === 'genre' ? (
+  <GenrePage genre={selectedGenre} sortOrder={sortOrder} />
+) : activePage === 'Subbed Anime' ? (
+  <GenrePage showAll={true} title="Subbed Anime" sortOrder={sortOrder} />
+) : activePage === 'Dubbed Anime' ? (
+  <GenrePage showAll={true} title="Dubbed Anime" sortOrder={sortOrder} />
+) : activePage === 'advance-search' ? (
+  <AdvancePage />
+) : activePage?.startsWith('Search result for') ? (
+  <SearchAnime query={searchResultsQuery} />
+) : (
+  <div className="placeholder-content">
+    <h1>{activePage}</h1>
+    <p>Page under construction...</p>
+  </div>
+)}
+
         </div>
       )}
 
-      {/* About Modal */}
-<AboutPage 
-  isOpen={isAboutModalOpen} 
-  onClose={() => setIsAboutModalOpen(false)} 
-/>
+      {/* Modals */}
+      <AboutPage 
+        isOpen={isAboutModalOpen} 
+        onClose={() => setIsAboutModalOpen(false)} 
+      />
 
-{/* Exit Modal */}
-<ExitModal 
-  isOpen={isExitModalOpen} 
-  onClose={() => setIsExitModalOpen(false)}
-  onExit={handleExit}
-/>
+      <ExitModal 
+        isOpen={isExitModalOpen} 
+        onClose={() => setIsExitModalOpen(false)}
+        onExit={handleExit}
+      />
+
+      <EventsModal 
+        isOpen={isEventsModalOpen} 
+        onClose={() => setIsEventsModalOpen(false)}
+      />
+
+      <TvSeriesModal 
+        isOpen={isTvSeriesModalOpen} 
+        onClose={() => setIsTvSeriesModalOpen(false)}
+      />
+
+      <MoviesModal 
+        isOpen={isMoviesModalOpen} 
+        onClose={() => setIsMoviesModalOpen(false)}
+      />
 
     </div>
   );

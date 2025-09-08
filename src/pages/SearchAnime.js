@@ -1,4 +1,3 @@
-// pages/SearchAnime.js
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
@@ -8,8 +7,9 @@ import "./SearchAnime.css";
 const SearchAnime = ({ query: searchQuery }) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recommended, setRecommended] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation(); // track current page for modal overlay
+  const location = useLocation();
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -18,13 +18,30 @@ const SearchAnime = ({ query: searchQuery }) => {
         const q = collection(db, "animes");
         const querySnapshot = await getDocs(q);
 
-        const filtered = querySnapshot.docs
-          .map((doc) => ({ id: doc.id, ...doc.data() }))
-          .filter((anime) =>
-            anime.title.toLowerCase().includes(searchQuery.toLowerCase())
-          );
+        const allAnimes = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        const filtered = allAnimes.filter((anime) =>
+          anime.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
         setResults(filtered);
+
+        // ✅ Fetch recommended based on first anime's genre
+        if (filtered.length > 0 && filtered[0].genre) {
+          const genre = filtered[0].genre;
+          const related = allAnimes.filter(
+            (anime) => anime.genre === genre && anime.id !== filtered[0].id
+          );
+
+          // Shuffle random 5
+          const shuffled = related.sort(() => 0.5 - Math.random()).slice(0, 5);
+          setRecommended(shuffled);
+        } else {
+          setRecommended([]);
+        }
       } catch (err) {
         console.error("Error fetching search results:", err);
       } finally {
@@ -35,7 +52,14 @@ const SearchAnime = ({ query: searchQuery }) => {
     if (searchQuery) fetchSearchResults();
   }, [searchQuery]);
 
-  if (loading) return <p>Loading results...</p>;
+  if (loading) {
+    return (
+      <div className="loading">
+        <div className="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (results.length === 0)
     return (
@@ -63,7 +87,7 @@ const SearchAnime = ({ query: searchQuery }) => {
                 style={{ cursor: "pointer" }}
                 onClick={() =>
                   navigate(`/anime/${anime.id}`, {
-                    state: { backgroundLocation: location }, // modal overlay
+                    state: { backgroundLocation: location },
                   })
                 }
               />
@@ -77,19 +101,11 @@ const SearchAnime = ({ query: searchQuery }) => {
                   episodes
                 </p>
 
-                {Array.isArray(anime.episodes) && anime.episodes.length > 0 && (
-                  <ul className="anime-episode-list">
-                    {anime.episodes.map((ep, idx) => (
-                      <li key={idx}>{ep.EpisodeTitle || "Untitled Episode"}</li>
-                    ))}
-                  </ul>
-                )}
-
                 <button
                   className="watch-btn1"
                   onClick={() =>
                     navigate(`/anime/${anime.id}`, {
-                      state: { backgroundLocation: location }, // modal overlay
+                      state: { backgroundLocation: location },
                     })
                   }
                 >
@@ -100,6 +116,53 @@ const SearchAnime = ({ query: searchQuery }) => {
           </div>
         ))}
       </div>
+
+      {/* ✅ Recommended Section */}
+      {recommended.length > 0 && (
+        <div className="recommended-section">
+          <h2>Recommended For You</h2>
+          <div className="recommended-list">
+            {recommended.map((anime) => (
+              <div className="recommended-card" key={anime.id}>
+                {/* Video / First Episode Preview */}
+                {anime.episodes && anime.episodes[0]?.videoUrl ? (
+                  <video
+                    className="recommended-video"
+                    controls
+                    poster={anime.episodes[0]?.thumbnail || ""}
+                  >
+                    <source
+                      src={anime.episodes[0].videoUrl}
+                      type="video/mp4"
+                    />
+                  </video>
+                ) : (
+                  <img
+                    src={anime.imageBase64 || "https://via.placeholder.com/150"}
+                    alt={anime.title}
+                    className="recommended-img"
+                  />
+                )}
+
+                <div className="recommended-info">
+                  <h3>{anime.episodes?.[0]?.EpisodeTitle || anime.title}</h3>
+                  <p>
+                    {anime.episodes?.[0]?.EpisodeDescription ||
+                      anime.description ||
+                      "No description available."}
+                  </p>
+                  <button
+                    className="watch-btn1"
+                    onClick={() => navigate(`/anime/${anime.id}`)}
+                  >
+                    Watch Now
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 };

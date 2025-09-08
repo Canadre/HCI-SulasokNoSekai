@@ -1,0 +1,245 @@
+/* Popular Anime Page */
+.popular-anime-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #3a6952d5 50%, #0f0f23 100%);
+  position: relative;
+  overflow: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 100px;
+}
+
+/* Background floating effects */
+.popular-anime-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Header Section */
+.popular-header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.popular-title {
+  font-size: 60px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ff7e7e 20%, #ffc371 80%);
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease-in-out infinite;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.popular-subtitle {
+  font-size: 1.2rem;
+  color: #b8c6db;
+  opacity: 0.8;
+  font-weight: 300;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Grid Layout */
+.popular-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  z-index: 2;
+  position: relative;
+}
+
+/* Anime Card */
+.popular-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+}
+
+.popular-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.popular-card:hover::before {
+  opacity: 1;
+}
+
+.popular-card:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Image */
+.popular-img-wrapper {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.popular-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.popular-card:hover .popular-img {
+  transform: scale(1.1);
+}
+
+/* Gradient overlay */
+.popular-img-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.popular-card:hover .popular-img-wrapper::after {
+  opacity: 1;
+}
+
+/* Info */
+.popular-info {
+  padding: 18px;
+  position: relative;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.popular-anime-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.popular-anime-genre {
+  font-size: 0.85rem;
+  color: #b8c6db;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.popular-episodes {
+  font-size: 0.85rem;
+  color: #facc15;
+  font-weight: 600;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #ffffff;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid #ff7e7e;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  color: #b8c6db;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* No Anime */
+.no-anime {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #ffffff;
+  text-align: center;
+}
+
+.no-anime img {
+  max-width: 300px;
+  opacity: 0.7;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.no-anime-text {
+  font-size: 1.5rem;
+  color: #b8c6db;
+}
+
+/* Custom scrollbar */
+.popular-anime-page::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popular-anime-page::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.popular-anime-page::-webkit-scrollbar-thumb {
+  background: #ff7e7e;
+  border-radius: 4px;
+}

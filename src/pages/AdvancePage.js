@@ -1,46 +1,83 @@
-import React, { useState } from 'react';
-import './AdvancePage.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase"; // <-- make sure you have firebase.js config
+import "./AdvancePage.css";
 
 const AdvancePage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // State
+  const [allAnime, setAllAnime] = useState([]);
+  const [results, setResults] = useState([]);
+  const [showFilters, setShowFilters] = useState(true);
+
   const [filters, setFilters] = useState({
-    type: 'All',
-    status: 'All',
-    startYear: '',
-    startMonth: '',
-    startDay: '',
-    endYear: '',
-    endMonth: '',
-    endDay: '',
-    genre: 'All'
+    releaseYear: "",
+    releaseMonth: "",
+    releaseDay: "",
+    genres: [], // ✅ multiple genres
+    type: "All",
+    status: "All",
   });
 
-  const typeOptions = ['All', 'TV', 'Movie', 'OVA', 'ONA', 'Special'];
-  const statusOptions = ['All', 'Airing', 'Completed', 'Upcoming'];
   const genreOptions = [
-    'All', 'Action', 'Comedy', 'Fantasy', 'Mystery', 'School', 
-    'Slice of Life', 'Sports', 'Sci-Fi', 'Romance', 'Drama', 'Horror', 'Adventure'
+    "Action", "Adventure", "Comedy", "Drama","Fantasy", "Horror",
+    "Mystery", "Romance",
+    "School", "Sci-Fi", "Slice of Life", "Sports"
   ];
 
   const months = [
-    'Month', 'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "Month", "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
+  const typeOptions = ["All", "Subbed", "Dubbed"];
+  const statusOptions = ["All", "Completed", "Ongoing"];
+
+  // Fetch data from Firestore
+  useEffect(() => {
+    const fetchAnime = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "animes"));
+        const animeList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // ✅ remove fake data
+        const cleanList = animeList.filter(
+          (anime) => anime.title && anime.genre && anime.releaseDate
+        );
+
+        setAllAnime(cleanList);
+      } catch (error) {
+        console.error("Error fetching anime data:", error);
+      }
+    };
+
+    fetchAnime();
+  }, []);
+
   const handleFilterChange = (filterType, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
+    setFilters((prev) => ({ ...prev, [filterType]: value }));
   };
 
-  const handleSearch = () => {
-    // Handle search logic here
-    console.log('Search filters:', filters);
+  const toggleGenre = (genre) => {
+    setFilters((prev) => {
+      const alreadySelected = prev.genres.includes(genre);
+      if (alreadySelected) {
+        return { ...prev, genres: prev.genres.filter((g) => g !== genre) };
+      } else {
+        return { ...prev, genres: [...prev.genres, genre] };
+      }
+    });
   };
 
   const generateYearOptions = () => {
     const currentYear = new Date().getFullYear();
-    const years = ['Year'];
+    const years = [""];
     for (let year = currentYear; year >= 1960; year--) {
       years.push(year.toString());
     }
@@ -48,133 +85,218 @@ const AdvancePage = () => {
   };
 
   const generateDayOptions = () => {
-    const days = ['Day'];
+    const days = [""];
     for (let day = 1; day <= 31; day++) {
       days.push(day.toString());
     }
     return days;
   };
 
+  const handleSearch = () => {
+    if (!allAnime || allAnime.length === 0) return;
+
+    const filtered = allAnime.filter((anime) => {
+      // ✅ Multi-genre check
+      const matchGenre =
+        filters.genres.length === 0 ||
+        filters.genres.some((g) => anime.genre && anime.genre.includes(g));
+
+      const matchType =
+        filters.type === "All" ||
+        filters.type === "Subbed" ||
+        filters.type === "Dubbed";
+
+      const matchStatus =
+        filters.status === "All" ||
+        filters.status === "Completed" ||
+        filters.status === "Ongoing";
+
+      const animeDate = new Date(anime.releaseDate);
+      const filterYear = filters.releaseYear
+        ? parseInt(filters.releaseYear)
+        : null;
+      const filterMonth = filters.releaseMonth
+        ? parseInt(filters.releaseMonth)
+        : null;
+      const filterDay = filters.releaseDay
+        ? parseInt(filters.releaseDay)
+        : null;
+
+      let matchDate = true;
+      if (filterYear && animeDate.getFullYear() !== filterYear) matchDate = false;
+      if (filterMonth && animeDate.getMonth() + 1 !== filterMonth) matchDate = false;
+      if (filterDay && animeDate.getDate() !== filterDay) matchDate = false;
+
+      return matchGenre && matchDate && matchType && matchStatus;
+    });
+
+    setResults(filtered);
+    setShowFilters(false);
+  };
+
+  const handleShowFilters = () => {
+    setShowFilters(true);
+    setResults([]); // hide results
+  };
+
   return (
     <div className="advance-search-container">
-      <div className="filter-section">
-        <h2 className="filter-title">Filter</h2>
-        
-        <div className="filter-row">
-          <div className="filter-group">
+      {showFilters && (
+        <div className="filter-section">
+          <h2 className="filter-title">Filter</h2>
+
+          {/* Type & Status Filter */}
+          <div className="select-group">
             <label>Type</label>
-            <select 
+            <select
               value={filters.type}
-              onChange={(e) => handleFilterChange('type', e.target.value)}
+              onChange={(e) => handleFilterChange("type", e.target.value)}
               className="filter-select"
             >
-              {typeOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
+              {typeOptions.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
               ))}
             </select>
-          </div>
 
-          <div className="filter-group">
             <label>Status</label>
-            <select 
+            <select
               value={filters.status}
-              onChange={(e) => handleFilterChange('status', e.target.value)}
+              onChange={(e) => handleFilterChange("status", e.target.value)}
               className="filter-select"
             >
-              {statusOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
+              {statusOptions.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
               ))}
             </select>
           </div>
-        </div>
 
-        <div className="date-row">
+          {/* Release Date Filter */}
           <div className="date-group">
-            <label>Start Date</label>
+            <label>Release Date</label>
             <div className="date-selects">
-              <select 
-                value={filters.startYear}
-                onChange={(e) => handleFilterChange('startYear', e.target.value)}
+              <select
+                value={filters.releaseYear}
+                onChange={(e) => handleFilterChange("releaseYear", e.target.value)}
                 className="date-select year-select"
               >
-                {generateYearOptions().map(year => (
-                  <option key={year} value={year}>{year}</option>
+                <option value="">Year</option>
+                {generateYearOptions().map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
                 ))}
               </select>
-              <select 
-                value={filters.startMonth}
-                onChange={(e) => handleFilterChange('startMonth', e.target.value)}
+              <select
+                value={filters.releaseMonth}
+                onChange={(e) => handleFilterChange("releaseMonth", e.target.value)}
                 className="date-select month-select"
               >
-                {months.map((month, index) => (
-                  <option key={month} value={index === 0 ? '' : index}>{month}</option>
+                <option value="">Month</option>
+                {months.slice(1).map((month, index) => (
+                  <option key={month} value={index + 1}>
+                    {month}
+                  </option>
                 ))}
               </select>
-              <select 
-                value={filters.startDay}
-                onChange={(e) => handleFilterChange('startDay', e.target.value)}
+              <select
+                value={filters.releaseDay}
+                onChange={(e) => handleFilterChange("releaseDay", e.target.value)}
                 className="date-select day-select"
               >
-                {generateDayOptions().map(day => (
-                  <option key={day} value={day === 'Day' ? '' : day}>{day}</option>
+                <option value="">Day</option>
+                {generateDayOptions().map((day) => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
 
-          <div className="date-group">
-            <label>End Date</label>
-            <div className="date-selects">
-              <select 
-                value={filters.endYear}
-                onChange={(e) => handleFilterChange('endYear', e.target.value)}
-                className="date-select year-select"
-              >
-                {generateYearOptions().map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-              <select 
-                value={filters.endMonth}
-                onChange={(e) => handleFilterChange('endMonth', e.target.value)}
-                className="date-select month-select"
-              >
-                {months.map((month, index) => (
-                  <option key={month} value={index === 0 ? '' : index}>{month}</option>
-                ))}
-              </select>
-              <select 
-                value={filters.endDay}
-                onChange={(e) => handleFilterChange('endDay', e.target.value)}
-                className="date-select day-select"
-              >
-                {generateDayOptions().map(day => (
-                  <option key={day} value={day === 'Day' ? '' : day}>{day}</option>
-                ))}
-              </select>
+          {/* Genre buttons */}
+          <div className="genre-section">
+            <h3 className="genre2-title">Genres (Multiple)</h3>
+            <div className="genre-buttons">
+              {genreOptions.map((genre) => (
+                <button
+                  key={genre}
+                  className={`genre-btn ${
+                    filters.genres.includes(genre) ? "active" : ""
+                  }`}
+                  onClick={() => toggleGenre(genre)}
+                >
+                  {genre}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        <div className="genre-section">
-          <h3 className="genre2-title">Genre</h3>
-          <div className="genre-dropdown">
-            <select 
-              value={filters.genre}
-              onChange={(e) => handleFilterChange('genre', e.target.value)}
-              className="genre-select"
-            >
-              {genreOptions.map(genre => (
-                <option key={genre} value={genre}>{genre}</option>
-              ))}
-            </select>
-          </div>
+          <button className="filter-button" onClick={handleSearch}>
+            Filter
+          </button>
         </div>
+      )}
 
-        <button className="filter-button" onClick={handleSearch}>
-          Filter
-        </button>
-      </div>
+      {!showFilters && (
+        <div style={{ marginBottom: "20px" }}>
+          <button className="filter-button" onClick={handleShowFilters}>
+            Change Filters
+          </button>
+        </div>
+      )}
+
+      <section className="search-anime-page">
+        <div className="search-anime-container">
+          {!showFilters && results.length > 0 ? (
+            results.map((anime) => (
+              <div className="featured-card search-anime-card" key={anime.id}>
+                <div className="featured-content">
+                  {/* Anime Image */}
+                  <img
+                    src={anime.imageBase64 || "https://via.placeholder.com/150"}
+                    alt={anime.title || "N/A"}
+                    className="featured-img anime-image"
+                    style={{ cursor: "pointer" }}
+                    onClick={() =>
+                      navigate(`/anime/${anime.id}`, {
+                        state: { backgroundLocation: location },
+                      })
+                    }
+                  />
+
+                  {/* Anime Details */}
+                  <div className="featured-details1">
+                    <h3 className="anime-title">{anime.title || "N/A"}</h3>
+                    <p className="anime-date">★ {anime.releaseDate || "N/A"}</p>
+                    <p className="anime-genre">{anime.genre || "N/A"}</p>
+                    <p className="anime-extra">
+                      Type: {filters.type !== "All" ? filters.type : "N/A"} | Status:{" "}
+                      {filters.status !== "All" ? filters.status : "N/A"}
+                    </p>
+
+                    <button
+                      className="watch-btn1"
+                      onClick={() =>
+                        navigate(`/anime/${anime.id}`, {
+                          state: { backgroundLocation: location },
+                        })
+                      }
+                    >
+                      Play Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            !showFilters && <p>No results found</p>
+          )}
+        </div>
+      </section>
     </div>
   );
 };

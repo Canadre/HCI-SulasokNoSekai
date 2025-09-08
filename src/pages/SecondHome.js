@@ -12,16 +12,16 @@ export default function SecondHome() {
   const [fetched, setFetched] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation(); // <-- to pass backgroundLocation
+  const location = useLocation();
 
-  // Fetch anime data
+  // ✅ Fetch anime data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "animes"));
         const list = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data(), // includes featuredPhoto, episodes, etc.
         }));
 
         if (list.length > 0) {
@@ -40,7 +40,7 @@ export default function SecondHome() {
     if (!fetched) fetchData();
   }, [fetched]);
 
-  // Slideshow interval
+  // ✅ Slideshow interval
   useEffect(() => {
     if (featuredList.length > 1) {
       const interval = setInterval(() => {
@@ -61,7 +61,7 @@ export default function SecondHome() {
 
   const currentFeatured = featuredList[currentIndex] || {};
 
-  // Helper to navigate with overlay background
+  // ✅ Navigate with overlay background
   const openAnimeDetail = (id) => {
     if (!id) return;
     navigate(`/anime/${id}`, { state: { backgroundLocation: location } });
@@ -72,31 +72,48 @@ export default function SecondHome() {
       {/* ===== Featured Slideshow Section ===== */}
       {featuredList.length > 0 && (
         <section className="featured">
-          <div className="featured-card">
-            <h2 className="section-title">Featured</h2>
-            <div className="featured-content">
-              <img
-                src={currentFeatured.imageBase64 || "https://via.placeholder.com/150"}
-                alt={currentFeatured.title || "N/A"}
-                className="featured-img"
-                onClick={() => openAnimeDetail(currentFeatured.id)}
-                style={{ cursor: "pointer" }}
-              />
-              <div className="featured-details">
-                <h3>{currentFeatured.title || "N/A"}</h3>
-                <p>{currentFeatured.releaseDate || "N/A"}</p>
-                <p>{currentFeatured.genre || "N/A"}</p>
-                <p>
-                  {currentFeatured.seasons
-                    ? `${currentFeatured.seasons} seasons ${currentFeatured.episodes || 0} episodes`
-                    : "0 seasons 0 episodes"}
-                </p>
-                <button
-                  className="watch-btn"
-                  onClick={() => openAnimeDetail(currentFeatured.id)}
-                >
-                  ▶ Watch Now
-                </button>
+          {/* 🔹 Background Banner */}
+          <div className="featured-banner">
+            <img
+              src={currentFeatured.featuredPhoto || "https://via.placeholder.com/150"}
+              alt={currentFeatured.title}
+              className="featured-photo"
+            />
+
+            <div className="featured-overlay">
+              <div className="featured-card">
+                <h2 className="section-title">Featured</h2>
+                <div className="featured-content">
+                  {/* Poster */}
+                  <img
+                    src={
+                      currentFeatured.imageBase64 ||
+                      "https://via.placeholder.com/150"
+                    }
+                    alt={currentFeatured.title || "N/A"}
+                    className="featured-img"
+                    onClick={() => openAnimeDetail(currentFeatured.id)}
+                    style={{ cursor: "pointer" }}
+                  />
+
+                  {/* Details */}
+                  <div className="featured-details">
+                    <h3>{currentFeatured.title || "N/A"}</h3>
+                    <p>{currentFeatured.releaseDate || "N/A"}</p>
+                    <p>{currentFeatured.genre || "N/A"}</p>
+                    <p>
+                      {Array.isArray(currentFeatured.episodes)
+                        ? `${currentFeatured.episodes.length} episodes`
+                        : "0 episodes"}
+                    </p>
+                    <button
+                      className="watch-btn"
+                      onClick={() => openAnimeDetail(currentFeatured.id)}
+                    >
+                      ▶ Watch Now
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

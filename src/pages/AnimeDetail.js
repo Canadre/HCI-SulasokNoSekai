@@ -14,6 +14,14 @@ export default function AnimeDetail() {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  // ✅ Lock scroll kapag nasa AnimeDetail
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   // Fetch anime from Firestore
   useEffect(() => {
     const fetchAnime = async () => {
@@ -23,8 +31,7 @@ export default function AnimeDetail() {
 
         if (docSnap.exists()) {
           const data = { id: docSnap.id, ...docSnap.data() };
-          data.episodes =
-            data.episodes?.map((ep) => ({ ...ep, isPlaying: false })) || [];
+          data.episodes = data.episodes || [];
           setAnime(data);
         } else {
           console.log("No such document!");
@@ -42,20 +49,14 @@ export default function AnimeDetail() {
   // Scroll and select episode
   const scrollToEpisode = (index) => {
     setCurrentEpisodeIndex(index);
-    setIsPlaying(false); // reset playing state when switching episodes
-
-    const updatedEpisodes = anime.episodes.map((ep, idx) => ({
-      ...ep,
-      isPlaying: idx === index,
-    }));
-    setAnime({ ...anime, episodes: updatedEpisodes });
+    setIsPlaying(false); // reset play state
 
     if (episodeRefs.current[index]) {
       episodeRefs.current[index].scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  // Play video and fullscreen
+  // Custom play button → play + fullscreen
   const handlePlay = () => {
     if (videoRef.current) {
       videoRef.current.play();
@@ -93,7 +94,7 @@ export default function AnimeDetail() {
           alt={anime.title}
           className="anime-cover"
         />
-        <div className="anime-info">
+        <div className="anime-info1">
           <h1>{anime.title}</h1>
           <p><strong>Release Date:</strong> {anime.releaseDate || "Unknown"}</p>
           <p><strong>Genre:</strong> {anime.genre || "N/A"}</p>
@@ -122,8 +123,12 @@ export default function AnimeDetail() {
 
                   {/* Video Player */}
                   {currentEpisode.videoUrl || currentEpisode.url ? (
-                    <div className="episode-video-wrapper" style={{ position: "relative" }}>
+                    <div
+                      className="episode-video-wrapper"
+                      style={{ position: "relative" }}
+                    >
                       <video
+                        key={currentEpisodeIndex}
                         ref={videoRef}
                         className="episode-video"
                         poster={currentEpisode.thumbnail || ""}
@@ -135,10 +140,24 @@ export default function AnimeDetail() {
                         />
                       </video>
 
+                      {/* Custom Play Button */}
                       {!isPlaying && (
                         <button
                           className="custom-play-btn"
                           onClick={handlePlay}
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            fontSize: "3rem",
+                            background: "rgba(0,0,0,0.6)",
+                            border: "none",
+                            borderRadius: "50%",
+                            color: "white",
+                            cursor: "pointer",
+                            padding: "20px 30px",
+                          }}
                         >
                           ▶
                         </button>
@@ -158,16 +177,19 @@ export default function AnimeDetail() {
             </div>
 
             {/* Episode Number Sidebar */}
-            <div className="episode-number-sidebar">
-              {anime.episodes.map((_, idx) => (
-                <button
-                  key={idx}
-                  className="episode-number-button"
-                  onClick={() => scrollToEpisode(idx)}
-                >
-                  {idx + 1}
-                </button>
-              ))}
+            <div className="episodes container">
+              <p className="episode-number-label">Episodes:</p>
+              <div className="episode-number-sidebar">
+                {anime.episodes.map((_, idx) => (
+                  <button
+                    key={idx}
+                    className="episode-number-button"
+                    onClick={() => scrollToEpisode(idx)}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+              </div>
             </div>
           </>
         ) : (
