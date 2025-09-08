@@ -22,24 +22,19 @@ const GenrePage = ({ genre, showAll = false, title, sortOrder = null }) => {
           ...doc.data(),
         }));
 
-        // ✅ Fix: Proper genre filtering with includes()
+        // ✅ Genre filtering by first letter
         if (!showAll && genre) {
+          const target = genre.toLowerCase();
+
           animeData = animeData.filter((anime) => {
             if (!anime.genre) return false;
 
-            // If genre is an array
-            if (Array.isArray(anime.genre)) {
-              return anime.genre.some((g) =>
-                g.toLowerCase().includes(genre.toLowerCase())
-              );
-            }
+            const animeGenres = Array.isArray(anime.genre)
+              ? anime.genre.map((g) => g.toLowerCase().trim())
+              : anime.genre.toLowerCase().split(",").map((g) => g.trim());
 
-            // If genre is a string (comma-separated or single)
-            return anime.genre
-              .toLowerCase()
-              .split(",")
-              .map((g) => g.trim())
-              .some((g) => g.includes(genre.toLowerCase()));
+            // Filter by first letter
+            return animeGenres.some((g) => g.startsWith(target));
           });
         }
 

@@ -74,14 +74,17 @@ export default function SecondHome() {
         <section className="featured">
           {/* 🔹 Background Banner */}
           <div className="featured-banner">
-            <img
-              src={currentFeatured.featuredPhoto || "https://via.placeholder.com/150"}
-              alt={currentFeatured.title}
-              className="featured-photo"
-            />
+  {featuredList.map((anime, index) => (
+    <img
+      key={anime.id}
+      src={anime.featuredPhoto || "https://via.placeholder.com/150"}
+      alt={anime.title}
+      className={`featured-photo ${index === currentIndex ? "active" : ""}`}
+    />
+  ))}
 
-            <div className="featured-overlay">
-              <div className="featured-card">
+  <div className="featured-overlay">
+    <div className="featured-card">
                 <h2 className="section-title">Featured</h2>
                 <div className="featured-content">
                   {/* Poster */}
