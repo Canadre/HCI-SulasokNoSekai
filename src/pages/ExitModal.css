@@ -15,7 +15,7 @@
 
 /* Exit Modal Container */
 .exit-modal {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(135deg, #20283d 0%, #163e27 100%);
   border-radius: 16px;
   width: 90%;
   max-width: 450px;
@@ -39,11 +39,11 @@
 /* Modal Header */
 .exit-modal-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 20px 25px;
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(28, 115, 60, 0.05);
+  border-bottom: 2px solid rgba(37, 160, 80, 0.293);
 }
 
 .exit-modal-header h2 {
@@ -54,29 +54,6 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.exit-modal-close {
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.exit-modal-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.1);
-}
-
-.exit-modal-close svg {
-  width: 20px;
-  height: 20px;
-}
-
 /* Modal Content */
 .exit-modal-content {
   padding: 30px 25px;
@@ -84,29 +61,28 @@
   color: #ffffff;
 }
 
-/* Exit Icon */
+/* Exit GIF */
 .exit-icon-container {
   margin-bottom: 20px;
 }
 
-.exit-icon {
-  width: 60px;
-  height: 60px;
-  color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.1);
+.exit-gif {
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  padding: 15px;
-  animation: exitIconPulse 2s infinite;
+  object-fit: cover;
+  border: 2px solid rgb(28, 206, 100);
+  animation: exitGifPulse 2s infinite;
 }
 
-@keyframes exitIconPulse {
+@keyframes exitGifPulse {
   0%, 100% {
     transform: scale(1);
     opacity: 1;
   }
   50% {
     transform: scale(1.05);
-    opacity: 0.8;
+    opacity: 0.9;
   }
 }
 
@@ -128,9 +104,9 @@
 
 /* Modal Footer */
 .exit-modal-footer {
-  padding: 20px 25px;
-  background: rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 27px 25px;
+  background: rgba(10, 31, 18, 0.206);
+  border-top: 2px solid rgba(37, 160, 80, 0.405);
   display: flex;
   justify-content: center;
   gap: 15px;
@@ -138,36 +114,40 @@
 
 .exit-modal-button {
   border: none;
-  padding: 12px 25px;
-  border-radius: 25px;
+  padding: 12px 15px;
+  border-radius: 14px;
   cursor: pointer;
+  height: 50px;
+  width: 150px;
   font-weight: 600;
   font-size: 0.95rem;
   transition: all 0.3s ease;
   min-width: 100px;
+  margin: 5px;
 }
 
 .exit-modal-button.cancel {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+  border: 1px solid rgba(17, 61, 33, 0.3);
+}
+
+.exit-modal-button.cancel:hover {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+}
+
+.exit-modal-button.confirm {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.exit-modal-button.cancel:hover {
+.exit-modal-button.confirm:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-}
-
-.exit-modal-button.confirm {
-  background: linear-gradient(135deg, #ff6b6b, #ff5252);
-  color: #ffffff;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-}
-
-.exit-modal-button.confirm:hover {
-  background: linear-gradient(135deg, #ff5252, #ff6b6b);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
 }
 
 .exit-modal-button:active {
@@ -181,13 +161,6 @@
 
 .thank-you-icon-container {
   margin-bottom: 25px;
-}
-
-.thank-you-icon {
-  width: 80px;
-  height: 80px;
-  color: #ff6b6b;
-  animation: thankYouHeartBeat 1.5s infinite;
 }
 
 @keyframes thankYouHeartBeat {
@@ -208,7 +181,7 @@
 }
 
 .thank-you-message .brand-name {
-  color: #4ecdc4;
+  color: #4ecd7f;
   font-size: 1.8rem;
   font-weight: 700;
   margin: 15px 0;
@@ -232,6 +205,26 @@
   line-height: 1.5;
 }
 
+.thank-you-gif {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgb(28, 206, 100);
+  animation: thankYouGifPulse 2s infinite;
+}
+
+@keyframes thankYouGifPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
 /* Loading Dots */
 .loading-dots {
   display: flex;
@@ -243,7 +236,7 @@
 .loading-dots span {
   width: 8px;
   height: 8px;
-  background: #4ecdc4;
+  background: #35b070a1;
   border-radius: 50%;
   animation: loadingDots 1.4s infinite ease-in-out;
 }
@@ -266,6 +259,8 @@
     opacity: 1;
   }
 }
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -290,10 +285,9 @@
     padding: 35px 20px;
   }
 
-  .exit-icon {
-    width: 50px;
-    height: 50px;
-    padding: 12px;
+  .exit-gif {
+    width: 100px;
+    height: 100px;
   }
 
   .thank-you-icon {
@@ -319,6 +313,13 @@
   .exit-modal-button {
     width: 100%;
   }
+
+
+   .thank-you-gif {
+    width: 70px;
+    height: 70px;
+  }
+
 }
 
 @media (max-width: 480px) {
@@ -338,5 +339,15 @@
   .exit-message p,
   .thank-you-message p {
     font-size: 0.9rem;
+  }
+
+  .exit-gif {
+    width: 80px;
+    height: 80px;
+  }
+
+  .thank-you-gif {
+    width: 60px;
+    height: 60px;
   }
 }

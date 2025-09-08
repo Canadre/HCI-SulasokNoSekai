@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { X, LogOut, Heart } from 'lucide-react';
 import './ExitModal.css';
 
 const ExitModal = ({ isOpen, onClose, onExit }) => {
@@ -22,10 +21,10 @@ const ExitModal = ({ isOpen, onClose, onExit }) => {
 
   const handleConfirmExit = () => {
     setShowThankYou(true);
-    // After 3 seconds, redirect to splash page
+    
     setTimeout(() => {
       onExit();
-    }, 3000);
+    }, 5000);
   };
 
   const handleCancel = () => {
@@ -36,44 +35,49 @@ const ExitModal = ({ isOpen, onClose, onExit }) => {
     <div className="exit-modal-overlay" onClick={handleOverlayClick}>
       <div className="exit-modal">
         {!showThankYou ? (
-          // Confirmation Screen
+          // Confirmation Screen section
           <>
             <div className="exit-modal-header">
               <h2>Confirm Exit</h2>
-              <button className="exit-modal-close" onClick={onClose}>
-                <X />
-              </button>
             </div>
             
             <div className="exit-modal-content">
               <div className="exit-icon-container">
-                <LogOut className="exit-icon" />
+                <img 
+                  src="/image/aqua.gif" 
+                  alt="Aqua" 
+                  className="exit-gif"
+                />
               </div>
               <div className="exit-message">
-                <h3>Are you sure you want to exit?</h3>
-                <p>You will be redirected to the main page.</p>
+                <h3>Are you sure you want to leave?</h3>
+                <p>You will be redirected to the Intro page.</p>
               </div>
             </div>
 
             <div className="exit-modal-footer">
-              <button className="exit-modal-button cancel" onClick={handleCancel}>
-                Cancel
-              </button>
               <button className="exit-modal-button confirm" onClick={handleConfirmExit}>
-                Yes, Exit
+                Yes, Leave
+              </button>
+              <button className="exit-modal-button cancel" onClick={handleCancel}>
+                No, I'll Stay
               </button>
             </div>
           </>
         ) : (
-          // Thank You Screen
+          // Thank You Screen section
           <>
             <div className="exit-modal-header">
-              <h2>Thank You!</h2>
+              <h2>Arigato!</h2>
             </div>
             
             <div className="exit-modal-content thank-you-content">
               <div className="thank-you-icon-container">
-                <Heart className="thank-you-icon" />
+                <img 
+                  src="/image/bye.gif" 
+                  alt="Goodbye" 
+                  className="thank-you-gif"
+                />
               </div>
               <div className="thank-you-message">
                 <h3>Thank you for using and visiting</h3>
