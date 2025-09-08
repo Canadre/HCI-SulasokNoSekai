@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -6,12 +6,15 @@ import "./AnimeDetail.css";
 
 export default function AnimeDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [anime, setAnime] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const episodeRefs = useRef([]);
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
+  // Fetch anime from Firestore
   useEffect(() => {
     const fetchAnime = async () => {
       try {
@@ -20,7 +23,8 @@ export default function AnimeDetail() {
 
         if (docSnap.exists()) {
           const data = { id: docSnap.id, ...docSnap.data() };
-          data.episodes = data.episodes?.map((ep) => ({ ...ep, isPlaying: false })) || [];
+          data.episodes =
+            data.episodes?.map((ep) => ({ ...ep, isPlaying: false })) || [];
           setAnime(data);
         } else {
           console.log("No such document!");
@@ -35,30 +39,53 @@ export default function AnimeDetail() {
     fetchAnime();
   }, [id]);
 
+  // Scroll and select episode
   const scrollToEpisode = (index) => {
     setCurrentEpisodeIndex(index);
+    setIsPlaying(false); // reset playing state when switching episodes
+
+    const updatedEpisodes = anime.episodes.map((ep, idx) => ({
+      ...ep,
+      isPlaying: idx === index,
+    }));
+    setAnime({ ...anime, episodes: updatedEpisodes });
+
     if (episodeRefs.current[index]) {
       episodeRefs.current[index].scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const handlePlay = (index) => {
-    if (!anime?.episodes) return;
+  // Play video and fullscreen
+  const handlePlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
 
-    const updatedEpisodes = anime.episodes.map((ep, idx) =>
-      idx === index ? { ...ep, isPlaying: true } : { ...ep, isPlaying: false }
-    );
-    setAnime({ ...anime, episodes: updatedEpisodes });
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      } else if (videoRef.current.webkitRequestFullscreen) {
+        videoRef.current.webkitRequestFullscreen();
+      } else if (videoRef.current.msRequestFullscreen) {
+        videoRef.current.msRequestFullscreen();
+      }
+    }
   };
 
   if (loading) return <p className="loading">Loading...</p>;
   if (!anime) return <p className="not-found">Anime not found.</p>;
 
   const hasEpisodes = anime.episodes && anime.episodes.length > 0;
-  const currentEpisode = hasEpisodes ? anime.episodes[currentEpisodeIndex] : null;
+  const currentEpisode = hasEpisodes
+    ? anime.episodes[currentEpisodeIndex]
+    : null;
 
   return (
     <div className="anime-detail">
+      {/* Back Button */}
+      <button className="back-btn" onClick={() => navigate(-1)}>
+        ⬅ Back
+      </button>
+
       {/* Anime Header */}
       <div className="anime-header">
         <img
@@ -87,25 +114,34 @@ export default function AnimeDetail() {
                   className="episode-card"
                 >
                   <h3 className="episode-title">
-                    Episode {currentEpisodeIndex + 1}: {currentEpisode.EpisodeTitle || currentEpisode.title || "Untitled"}
+                    Episode {currentEpisodeIndex + 1}:{" "}
+                    {currentEpisode.EpisodeTitle ||
+                      currentEpisode.title ||
+                      "Untitled"}
                   </h3>
 
-                  {/* Video or Thumbnail */}
+                  {/* Video Player */}
                   {currentEpisode.videoUrl || currentEpisode.url ? (
-                    <div className="episode-video-wrapper">
-                      {!currentEpisode.isPlaying ? (
-                        <video
-                          className="episode-video"
-                          poster={currentEpisode.thumbnail || ""}
-                          preload="metadata"
-                          onClick={() => handlePlay(currentEpisodeIndex)}
+                    <div className="episode-video-wrapper" style={{ position: "relative" }}>
+                      <video
+                        ref={videoRef}
+                        className="episode-video"
+                        poster={currentEpisode.thumbnail || ""}
+                        controls={isPlaying}
+                      >
+                        <source
+                          src={currentEpisode.videoUrl || currentEpisode.url}
+                          type="video/mp4"
+                        />
+                      </video>
+
+                      {!isPlaying && (
+                        <button
+                          className="custom-play-btn"
+                          onClick={handlePlay}
                         >
-                          <source src={currentEpisode.videoUrl || currentEpisode.url} type="video/mp4" />
-                        </video>
-                      ) : (
-                        <video className="episode-video" controls autoPlay>
-                          <source src={currentEpisode.videoUrl || currentEpisode.url} type="video/mp4" />
-                        </video>
+                          ▶
+                        </button>
                       )}
                     </div>
                   ) : (
@@ -113,7 +149,9 @@ export default function AnimeDetail() {
                   )}
 
                   <p className="episode-description">
-                    {currentEpisode.EpisodeDescription || currentEpisode.description || "No description"}
+                    {currentEpisode.EpisodeDescription ||
+                      currentEpisode.description ||
+                      "No description"}
                   </p>
                 </li>
               </ul>

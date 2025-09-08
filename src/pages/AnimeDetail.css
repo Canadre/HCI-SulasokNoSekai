@@ -1,10 +1,13 @@
 /* ----------------- Anime Detail ----------------- */
 .anime-detail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: #002b43;
-  color: #fff;
-  padding: 20px;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
+  z-index: 9999;
+  overflow-y: auto;
 }
 
 .loading,
@@ -27,14 +30,14 @@
   height: 400px;
   object-fit: cover;
   border-radius: 8px;
-  margin-left: 100px;
+  margin-left: 0; /* removed extra margin */
   margin-top: 20px;
   flex-shrink: 0;
 }
 
 .anime-info h1 {
   font-size: 60px;
-  margin: 180px 0 10px 0;
+  margin: 20px 0 10px 0; /* adjusted for smaller gap */
 }
 
 /* ----------------- Episodes Wrapper ----------------- */
@@ -42,22 +45,55 @@
   display: flex;
   gap: 20px;
   margin-top: 30px;
-  align-items: flex-start; /* align card and sidebar */
+  align-items: flex-start;
+  padding-left: 20px;
+  flex-wrap: nowrap; /* keep sidebar and video on same row */
 }
 
-/* ----------------- Episode Cards ----------------- */
+/* ----------------- Episode Sidebar ----------------- */
+
+.episode-number-sidebar {
+  display: flex;
+  flex-direction: row;   
+  gap: 10px;             
+  flex-wrap: wrap;       
+  margin-left: 20px;     
+  height: fit-content;
+}
+
+
+.episode-number-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  height: 50px;
+  width: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex: 0 0 auto;
+}
+
+.episode-number-button:hover {
+  background-color: #0056b3;
+}
+
+
+/* ----------------- Video + Episode Section ----------------- */
 .episodes-section {
-  flex: 1; /* take remaining width */
+  flex: 1; /* take remaining horizontal space */
+  margin-left: 0;
+  max-width: 100%;
 }
 
 .episode-card {
   display: flex;
   flex-direction: column;
-  width: 1100px;
+  width: 100%;
   background: #013a54;
   border-radius: 10px;
   padding: 15px;
-  margin-left: 80px;
   margin-bottom: 20px;
 }
 
@@ -70,7 +106,6 @@
 .episode-video-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1070px;
   aspect-ratio: 16/9;
   border-radius: 8px;
   overflow: hidden;
@@ -84,61 +119,64 @@
   border-radius: 8px;
 }
 
-/* Thumbnail */
-.video-thumbnail {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-color: #000; 
+/* ----------------- Play Button ----------------- */
+.custom-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  transition: transform 0.2s, background 0.2s;
 }
 
-.play-button {
-  font-size: 60px;
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-  pointer-events: none;
+.custom-play-btn:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(0, 0, 0, 0.7);
 }
 
+/* Episode description */
 .episode-description {
   font-size: 16px;
   color: #ddd;
   margin-top: 5px;
 }
 
-/* ----------------- Episode Sidebar ----------------- */
-.episode-number-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex-shrink: 0;
-  margin-left: 10px; /* close to episode card */
-}
-
-.episode-number-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 0;
-  width: 40px;
-  height: 40px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.episode-number-button:hover {
-  background-color: #0056b3;
-}
-
 /* ----------------- Responsive ----------------- */
 @media (max-width: 1024px) {
+  .episodes-wrapper {
+    flex-direction: column;  /* stack sidebar on top */
+    padding-left: 0;
+  }
+
+  .episode-number-sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    width: 100%;
+    margin-bottom: 10px;
+    top: auto;
+    position: relative;
+  }
+
+  .episode-number-button {
+    min-width: 35px;
+    height: 35px;
+    width: 35px;
+    font-size: 14px;
+  }
+
   .episode-card {
     width: 100%;
-    margin-left: 0;
   }
 
   .anime-cover {
@@ -147,7 +185,6 @@
 
   .anime-info h1 {
     font-size: 40px;
-    margin-top: 20px;
   }
 }
 
@@ -163,15 +200,17 @@
 
   .episode-number-sidebar {
     flex-direction: row;
-    gap: 5px;
     overflow-x: auto;
-    position: static;
-    margin-top: 10px;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    margin-left: 0;
+    padding: 5px 10px;
   }
 
   .episode-number-button {
-    width: 35px;
-    height: 35px;
-    font-size: 14px;
+    min-width: 30px;
+    height: 30px;
+    width: 30px;
+    font-size: 12px;
   }
 }

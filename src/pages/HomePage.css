@@ -818,6 +818,13 @@ body {
   backdrop-filter: blur(20px);
 }
 
+/* Wrapper for buttons on the right side (filter + close) */
+.overlay-header-buttons {
+  display: flex;
+  gap: var(--spacing-sm); /* space between filter and close */
+}
+
+/* Close button */
 .close-overlay {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -832,6 +839,26 @@ body {
 }
 
 .close-overlay:hover {
+  background: var(--accent-gradient);
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
+}
+
+/* Filter button */
+.filter-button {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: var(--transition-bounce);
+  backdrop-filter: blur(10px);
+}
+
+.filter-button:hover {
   background: var(--accent-gradient);
   transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);

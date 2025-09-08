@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import "./SecondHome.css";
@@ -12,6 +12,7 @@ export default function SecondHome() {
   const [fetched, setFetched] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation(); // <-- to pass backgroundLocation
 
   // Fetch anime data
   useEffect(() => {
@@ -49,7 +50,6 @@ export default function SecondHome() {
     }
   }, [featuredList]);
 
-  // Show loading on first fetch
   if (loading && !fetched) {
     return (
       <div className="loading">
@@ -59,8 +59,13 @@ export default function SecondHome() {
     );
   }
 
-  // Prevent crash if featuredList is empty
   const currentFeatured = featuredList[currentIndex] || {};
+
+  // Helper to navigate with overlay background
+  const openAnimeDetail = (id) => {
+    if (!id) return;
+    navigate(`/anime/${id}`, { state: { backgroundLocation: location } });
+  };
 
   return (
     <div className="second-home">
@@ -74,7 +79,8 @@ export default function SecondHome() {
                 src={currentFeatured.imageBase64 || "https://via.placeholder.com/150"}
                 alt={currentFeatured.title || "N/A"}
                 className="featured-img"
-                onClick={() => currentFeatured.id && navigate(`/anime/${currentFeatured.id}`)}
+                onClick={() => openAnimeDetail(currentFeatured.id)}
+                style={{ cursor: "pointer" }}
               />
               <div className="featured-details">
                 <h3>{currentFeatured.title || "N/A"}</h3>
@@ -87,7 +93,7 @@ export default function SecondHome() {
                 </p>
                 <button
                   className="watch-btn"
-                  onClick={() => currentFeatured.id && navigate(`/anime/${currentFeatured.id}`)}
+                  onClick={() => openAnimeDetail(currentFeatured.id)}
                 >
                   ▶ Watch Now
                 </button>
@@ -112,7 +118,8 @@ export default function SecondHome() {
                 <div
                   key={anime.id}
                   className="trend-card"
-                  onClick={() => anime.id && navigate(`/anime/${anime.id}`)}
+                  onClick={() => openAnimeDetail(anime.id)}
+                  style={{ cursor: "pointer" }}
                 >
                   <div className="trend-number">#{index + 1}</div>
                   <img
