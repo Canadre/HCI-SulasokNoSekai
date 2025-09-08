@@ -81,8 +81,6 @@
   display: block; 
 }
 
-
-
 .featured-overlay {
   position: absolute;
   inset: 0;
@@ -92,11 +90,8 @@
   justify-content: center;
   padding: 20px;
 
-  background: rgba(0,0,0,0.4); /* semi transparent black */
+  background: rgba(0,0,0,0.4); 
 }
-
-
-
 
 .featured-card {
   
@@ -252,7 +247,7 @@
 
 /*watch button sa featured */
 .watch-btn {
-  background: linear-gradient(135deg,  #20b670ba 0%, #a6dca6b2 50%, #139e5db9 100%);
+  background: linear-gradient(135deg,  #26ae6fba 0%, #8fdcb7f7 50%, #b1ffdb 100%);
   background-size: 200% 200%;
   color: white;
   border: none;
@@ -260,7 +255,7 @@
   border-radius: 20px;
   cursor: pointer;
   font-weight: 900;
-  font-size: 12px;
+  font-size: 15px;
   width: fit-content;
   margin-top: 4px;
   margin-bottom: -10px;
@@ -276,8 +271,8 @@
 }
 
 @keyframes buttonPulse {
-  0%, 100% { box-shadow: 0 15px 35px rgba(21, 219, 126, 0.5), 0 0 30px rgba(21, 219, 126, 0.3); }
-  50% { box-shadow: 0 20px 45px rgba(21, 219, 126, 0.7), 0 0 40px rgba(21, 219, 126, 0.5); }
+  0%, 100% { box-shadow: 0 15px 35px rgba(28, 147, 91, 0.5), 0 0 30px rgba(21, 219, 126, 0.3); }
+  50% { box-shadow: 0 20px 45px rgba(23, 159, 96, 0.7), 0 0 40px rgba(21, 219, 126, 0.5); }
 }
 
 .watch-btn::before {
@@ -287,7 +282,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(70, 110, 93, 0.4), transparent);
   transition: left 0.6s ease;
 }
 
@@ -299,7 +294,7 @@
   transform: translateY(-5px) scale(1.05);
   background-position: 100% 100%;
   box-shadow: 
-    0 25px 50px rgba(21, 219, 126, 0.6),
+    0 25px 50px rgba(30, 155, 97, 0.6),
     0 0 50px rgba(21, 219, 126, 0.4);
   letter-spacing: 2px;
 }
@@ -396,14 +391,30 @@
   50% { left: 100%; }
 }
 
-/* trending yarn*/
+/* bg ng trends */
 .trends {
-  background: none;
+  background: 
+    linear-gradient(135deg, 
+      rgba(15, 20, 25, 0.95) 0%, 
+      rgba(25, 35, 45, 0.9) 25%,
+      rgba(35, 45, 60, 0.85) 50%,
+      rgba(25, 35, 45, 0.9) 75%,
+      rgba(15, 20, 25, 0.95) 100%
+    ),
+    radial-gradient(circle at 20% 80%, rgba(21, 219, 126, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(160, 212, 160, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(56, 178, 172, 0.05) 0%, transparent 50%);
   margin: 0 20px;
-  padding-top: 70px;
+  padding: 70px 0 50px;
   position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* bg ng trends section*/
 .trends::before {
   content: '';
   position: absolute;
@@ -411,20 +422,156 @@
   left: 0;
   right: 0;
   bottom: 0;
+  background: 
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hexagon" x="0" y="0" width="10" height="8.66" patternUnits="userSpaceOnUse"><polygon points="5,0 9.33,2.5 9.33,7.5 5,10 0.67,7.5 0.67,2.5" fill="none" stroke="rgba(21,219,126,0.1)" stroke-width="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23hexagon)"/></svg>') repeat,
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="rgba(21,219,126,0.2)"><animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="30" cy="30" r="0.5" fill="rgba(160,212,160,0.3)"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0.5s"/></circle><circle cx="70" cy="20" r="0.8" fill="rgba(21,219,126,0.15)"><animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite" begin="1s"/></circle></svg>') repeat;
+  opacity: 0.6;
+  animation: floatBackground 20s ease-in-out infinite;
   pointer-events: none;
 }
 
-.trends .section-title {
-  margin-bottom: 2px;
-  padding-right: 1450px;
-  text-align: center;
+.trends::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    conic-gradient(from 0deg at 50% 50%, 
+      transparent 0deg, 
+      rgba(21, 219, 126, 0.03) 60deg, 
+      transparent 120deg, 
+      rgba(160, 212, 160, 0.02) 180deg, 
+      transparent 240deg, 
+      rgba(21, 219, 126, 0.03) 300deg, 
+      transparent 360deg
+    );
+  animation: rotateGradient 30s linear infinite;
+  pointer-events: none;
 }
 
-.trends-container {
-  padding-bottom: 20px;
+@keyframes floatBackground {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-10px) translateX(5px); }
+  50% { transform: translateY(-5px) translateX(-3px); }
+  75% { transform: translateY(-15px) translateX(8px); }
+}
+
+@keyframes rotateGradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Floating Particles */
+.trends .floating-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.trends .particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(21, 219, 126, 0.6);
+  border-radius: 50%;
+  animation: floatUp 15s infinite linear;
+}
+
+.trends .particle:nth-child(2n) {
+  background: rgba(160, 212, 160, 0.4);
+  animation-duration: 18s;
+  animation-delay: -5s;
+}
+
+.trends .particle:nth-child(3n) {
+  background: rgba(56, 178, 172, 0.5);
+  animation-duration: 12s;
+  animation-delay: -8s;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Enhanced Section Title */
+.trends .section-title {
+  margin-bottom: -15px;
+  padding-right: 1400px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 3px;
   position: relative;
-  border-radius: 14px;
-  overflow:visible;
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(21, 219, 126, 0.3);
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+.trends .section-title::before {
+  content: '★';
+  position: absolute;
+  left: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #15db7e;
+  animation: starTwinkle 2s ease-in-out infinite;
+}
+
+.trends .section-title::after {
+  content: '★';
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #15db7e;
+  animation: starTwinkle 2s ease-in-out infinite 1s;
+}
+
+@keyframes titleGlow {
+  0% { text-shadow: 0 0 30px rgba(21, 219, 126, 0.3); }
+  100% { text-shadow: 0 0 40px rgba(21, 219, 126, 0.5), 0 0 60px rgba(21, 219, 126, 0.2); }
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.7; transform: translateY(-50%) scale(1); }
+  50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+}
+
+/* Enhanced Trends Container */
+.trends-container {
+  padding-bottom: 30px;
+  position: relative;
+  border-radius: 20px;
+  overflow: visible;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(21, 219, 126, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .trends-container::before,
@@ -432,7 +579,7 @@
   content: '';
   position: absolute;
   top: 0;
-  width: 60px;
+  width: 80px;
   height: 100%;
   z-index: 2;
   pointer-events: none;
@@ -440,63 +587,80 @@
 
 .trends-container::before {
   left: 0;
-  background: linear-gradient(90deg, rgba(15, 20, 25, 1) 0%, transparent 100%);
+  background: linear-gradient(90deg, 
+    rgba(15, 20, 25, 1) 0%, 
+    rgba(15, 20, 25, 0.8) 30%, 
+    transparent 100%
+  );
 }
 
 .trends-container::after {
   right: 0;
-  background: linear-gradient(270deg, rgba(15, 20, 25, 1) 0%, transparent 100%);
+  background: linear-gradient(270deg, 
+    rgba(15, 20, 25, 1) 0%, 
+    rgba(15, 20, 25, 0.8) 30%, 
+    transparent 100%
+  );
 }
 
+/* Enhanced Scrollbar */
 .trends-row {
   display: flex;
-  gap: 35px;
+  gap: 40px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
-  padding: 0 20px 30px;
+  padding: 35px 40px 40px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(21, 219, 126, 0.6) rgba(45, 55, 72, 0.4);
+  scrollbar-color: rgba(21, 219, 126, 0.8) rgba(45, 55, 72, 0.6);
 }
 
 .trends-row::-webkit-scrollbar {
-  height: 10px;
+  height: 12px;
 }
 
 .trends-row::-webkit-scrollbar-track {
-  background: rgba(45, 55, 72, 0.4);
-  border-radius: 15px;
+  background: rgba(45, 55, 72, 0.6);
+  border-radius: 20px;
+  margin: 0 40px;
 }
 
 .trends-row::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #15db7e, #a0d4a0);
-  border-radius: 15px;
+  background: linear-gradient(90deg, #15db7e, #a0d4a0, #38b2ac);
+  border-radius: 20px;
   transition: all 0.3s ease;
+  border: 2px solid rgba(45, 55, 72, 0.6);
 }
 
 .trends-row::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #a0d4a0, #15db7e);
-  box-shadow: 0 0 10px rgba(21, 219, 126, 0.5);
+  background: linear-gradient(90deg, #a0d4a0, #15db7e, #38b2ac);
+  box-shadow: 0 0 15px rgba(21, 219, 126, 0.6);
+  border-color: rgba(21, 219, 126, 0.3);
 }
 
-/* yung mga anime sa trnds*/
+/* Enhanced Trend Cards */
 .trend-card {
-  width: 300px;
-  min-width: 300px;
+  width: 320px;
+  min-width: 320px;
   flex-shrink: 0;
   background: 
-    linear-gradient(135deg, rgba(45, 55, 72, 0.95) 0%, rgba(85, 104, 68, 0.9) 100%);
-  border-radius: 25px;
-  padding: 30px;
+    linear-gradient(135deg, 
+      rgba(38, 62, 53, 0.98) 0%, 
+      rgba(37, 44, 68, 0.95) 50%,
+      rgba(25, 35, 45, 0.98) 100%
+    );
+  border-radius: 30px;
+  padding: 35px;
   text-align: left;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-  border: 2px solid rgba(21, 219, 126, 0.2);
-  backdrop-filter: blur(15px) saturate(1.2);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  border: 2px solid rgba(21, 219, 126, 0.3);
+  backdrop-filter: blur(20px) saturate(1.4);
   position: relative;
   overflow: hidden;
   box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(21, 219, 126, 0.1);
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(21, 219, 126, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   cursor: pointer;
 }
 
@@ -506,10 +670,10 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #15db7e, #a0d4a0);
+  height: 6px;
+  background: linear-gradient(90deg, #15db7e, #a0d4a0, #38b2ac);
   transform: scaleX(0);
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
 }
 
 .trend-card::after {
@@ -520,9 +684,9 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 50% 50%, rgba(21, 219, 126, 0.1) 0%, transparent 70%);
+    radial-gradient(circle at 50% 50%, rgba(21, 219, 126, 0.12) 0%, transparent 70%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
   pointer-events: none;
 }
 
@@ -535,92 +699,139 @@
 }
 
 .trend-card:hover {
-  transform: translateY(-15px) scale(1.03);
+  transform: translateY(-20px) scale(1.05);
   box-shadow: 
-    0 25px 50px rgba(21, 219, 126, 0.3),
-    0 0 40px rgba(21, 219, 126, 0.2);
-  border-color: rgba(21, 219, 126, 0.6);
+    0 30px 60px rgba(21, 219, 126, 0.4),
+    0 0 50px rgba(21, 219, 126, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(21, 219, 126, 0.8);
 }
 
-/* yung mga top 1 top 2 */
+/* Enhanced Trend Number */
 .trend-number {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 25px;
+  right: 25px;
   background: linear-gradient(135deg, #15db7e, #a0d4a0);
   color: #0f1419;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   box-shadow: 
-    0 6px 15px rgba(21, 219, 126, 0.5),
-    0 0 20px rgba(21, 219, 126, 0.3);
-  transition: all 0.3s ease;
-  animation: numberPulse 2s ease-in-out infinite alternate;
+    0 8px 20px rgba(21, 219, 126, 0.6),
+    0 0 30px rgba(21, 219, 126, 0.4);
+  transition: all 0.4s ease;
+  animation: numberPulse 3s ease-in-out infinite alternate;
+  border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
 @keyframes numberPulse {
-  0% { box-shadow: 0 6px 15px rgba(21, 219, 126, 0.5), 0 0 20px rgba(21, 219, 126, 0.3); }
-  100% { box-shadow: 0 8px 20px rgba(21, 219, 126, 0.6), 0 0 25px rgba(21, 219, 126, 0.4); }
+  0% { 
+    box-shadow: 0 8px 20px rgba(21, 219, 126, 0.6), 0 0 30px rgba(21, 219, 126, 0.4);
+    transform: scale(1);
+  }
+  100% { 
+    box-shadow: 0 12px 30px rgba(21, 219, 126, 0.8), 0 0 40px rgba(21, 219, 126, 0.6);
+    transform: scale(1.05);
+  }
 }
 
 .trend-card:hover .trend-number {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.2) rotate(10deg);
+  box-shadow: 
+    0 15px 35px rgba(21, 219, 126, 0.8),
+    0 0 50px rgba(21, 219, 126, 0.6);
 }
 
+/* Enhanced Trend Image */
 .trend-img {
   width: 100%;
-  height: 220px;
+  height: 240px;
   object-fit: cover;
-  border-radius: 20px;
-  margin-bottom: 25px;
-  transition: all 0.4s ease;
-  border: 2px solid rgba(21, 219, 126, 0.3);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 25px;
+  margin-bottom: 30px;
+  transition: all 0.5s ease;
+  border: 3px solid rgba(21, 219, 126, 0.4);
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(21, 219, 126, 0.1);
+  position: relative;
 }
 
 .trend-card:hover .trend-img {
-  transform: scale(1.05);
-  border-color: rgba(21, 219, 126, 0.5);
-  box-shadow: 0 12px 30px rgba(21, 219, 126, 0.2);
+  transform: scale(1.08);
+  border-color: rgba(21, 219, 126, 0.7);
+  box-shadow: 
+    0 15px 35px rgba(21, 219, 126, 0.3),
+    0 0 30px rgba(21, 219, 126, 0.2);
 }
 
+/* Enhanced Text Elements */
 .trend-info {
   position: relative;
   z-index: 2;
 }
 
 .trend-title {
-  font-size: 1.3rem;
+  font-size:25px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   line-height: 1.3;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-  transition: color 0.3s ease;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  transition: all 0.4s ease;
 }
 
 .trend-card:hover .trend-title {
-  color: #15db7e;
+  color: #65ffb7e5;
+  text-shadow: 0 0 15px rgba(21, 219, 126, 0.5);
+  transform: translateY(-3px);
 }
 
 .trend-genre {
-  font-size: 1.1rem;
-  color: #a0d4a0;
+  font-size: 15px;
+  color: #ace4cc;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   opacity: 0.9;
-  transition: opacity 0.3s ease;
+  transition: all 0.4s ease;
+  position: relative;
 }
 
-.trend-card:hover .trend-genre {
-  opacity: 1;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .trends {
+    margin: 0 10px;
+    padding: 50px 0 30px;
+    border-radius: 20px;
+  }
+  
+  .trends .section-title {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .trends .section-title::before,
+  .trends .section-title::after {
+    display: none;
+  }
+  
+  .trend-card {
+    width: 280px;
+    min-width: 280px;
+    padding: 25px;
+  }
+  
+  .trends-row {
+    gap: 25px;
+    padding: 20px 20px 30px;
+  }
 }
 
 /* loading to*/

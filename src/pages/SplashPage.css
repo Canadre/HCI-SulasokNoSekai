@@ -23,7 +23,7 @@
   left: 0%;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(86, 15, 153, 0.1) 0%, rgba(0, 0, 0, 1) 50%, rgba(59, 130, 246, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(15, 153, 91, 0.208) 0%, rgba(0, 0, 0, 1) 50%, rgba(59, 130, 246, 0.1) 100%);
   animation: bgPulse 4s ease-in-out infinite;
 }
 
@@ -59,9 +59,9 @@
 }
 
 .brand-label {
-  font-size: 0.875rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: #a855f7;
+  color: #47d29d;
   letter-spacing: 0.3em;
   margin-bottom: 1rem;
   text-transform: uppercase;
@@ -79,7 +79,7 @@
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #a855f7, #ec4899);
+  background: linear-gradient(135deg, #47ae86, #593eb9);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -112,10 +112,10 @@
 }
 
 .enter-button:hover {
-  background-color: #7c3aed;
+  background-color: #36c27f;
   color: white;
   transform: scale(1.05);
-  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 20px 40px rgba(47, 187, 164, 0.4);
 }
 
 .play-icon {

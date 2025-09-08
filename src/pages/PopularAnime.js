@@ -1,3 +1,4 @@
+ // popular anime js
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
@@ -21,7 +22,7 @@ const PopularAnime = () => {
           ...doc.data(),
         }));
 
-        // 🔥 Priority titles
+       
         const priorityTitles = [
           "Demon Slayer: Kimetsu no Yaiba",
           "Naruto: Shippuden",

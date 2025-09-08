@@ -1,184 +1,441 @@
+/* Clean Advanced Search Page - Dark Navy Blue & Pastel Green */
+
 .advance-search-container {
-  background-color: #1a1a2e;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #ffffff;
   padding: 2rem;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #86efac, #22d3ee);
+  border-radius: 6px;
+  border: 2px solid rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #22d3ee, #86efac);
+}
+
+/* Firefox scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #86efac rgba(15, 23, 42, 0.5);
 }
 
 .filter-section {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid rgba(134, 239, 172, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .filter-title {
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 600;
   margin-bottom: 2rem;
-  color: #ffffff;
+  text-align: center;
+  color: #86efac;
 }
 
-.filter-row {
+.filter-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: #86efac;
+  margin: 0.5rem auto 0;
+  border-radius: 1px;
+}
+
+/* Type & Status Section */
+.select-group {
   display: flex;
+  align-items: center;
   gap: 2rem;
   margin-bottom: 2rem;
   flex-wrap: wrap;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  min-width: 150px;
-}
-
-.filter-group label {
-  color: #ffffff;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.filter-select {
-  background-color: #2d2d44;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #ffffff;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-select:hover {
-  border-color: #666;
-  background-color: #333350;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: #6c63ff;
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
-}
-
-.date-row {
-  display: flex;
-  gap: 3rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.date-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.date-group label {
-  color: #ffffff;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.date-selects {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.date-select {
-  background-color: #2d2d44;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #ffffff;
-  padding: 0.75rem 0.5rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.year-select {
-  min-width: 80px;
-}
-
-.month-select {
-  min-width: 100px;
-}
-
-.day-select {
-  min-width: 60px;
-}
-
-.date-select:hover {
-  border-color: #666;
-  background-color: #333350;
-}
-
-.date-select:focus {
-  outline: none;
-  border-color: #6c63ff;
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
-}
-
-.genre-section {
-  margin-bottom: 3rem;
-}
-
-.genre2-title {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #ffffff;
-}
-
-.genre-dropdown {
-  max-width: 200px;
-}
-
-.genre-select {
-  background-color: #2d2d44;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #ffffff;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  width: 100%;
-  transition: all 0.3s ease;
-}
-
-.genre-select:hover {
-  border-color: #666;
-  background-color: #333350;
-}
-
-.genre-select:focus {
-  outline: none;
-  border-color: #6c63ff;
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
-}
-
-.filter-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
+  padding: 1.5rem;
+  background: rgba(30, 41, 59, 0.5);
   border-radius: 12px;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 1rem;
+  border: 1px solid rgba(134, 239, 172, 0.1);
+}
+
+.select-group label {
   font-weight: 600;
-  padding: 0.875rem 2.5rem;
-  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  color: #86efac;
+  margin-right: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
+.filter-select {
+  background: #1e293b;
+  border: 1px solid rgba(134, 239, 172, 0.3);
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.filter-select:hover {
+  border-color: #86efac;
+  background: #334155;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #86efac;
+  box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.2);
+}
+
+/* Date Section */
+.date-group {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(134, 239, 172, 0.1);
+}
+
+.date-group label {
+  color: #86efac;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.date-selects {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.date-select {
+  background: #1e293b;
+  border: 1px solid rgba(134, 239, 172, 0.3);
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.year-select { min-width: 100px; }
+.month-select { min-width: 120px; }
+.day-select { min-width: 80px; }
+
+.date-select:hover {
+  border-color: #86efac;
+  background: #334155;
+}
+
+.date-select:focus {
+  outline: none;
+  border-color: #86efac;
+  box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.2);
+}
+
+/* Genre Section */
+.genre-section {
+  margin-bottom: 2.5rem;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(134, 239, 172, 0.1);
+}
+
+.genre2-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #86efac;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.genre-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.genre-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(134, 239, 172, 0.3);
+  background: #1e293b;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.genre-btn:hover {
+  border-color: #86efac;
+  background: #334155;
+  transform: translateY(-1px);
+}
+
+.genre-btn.active {
+  background: #86efac;
+  border-color: #86efac;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Filter Button */
+.filter-button {
+  background: linear-gradient(135deg, #86efac, #22c55e);
+  border: none;
+  border-radius: 8px;
+  color: #0f172a;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.875rem 2rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(134, 239, 172, 0.3);
+}
+
 .filter-button:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  background: linear-gradient(135deg, #22c55e, #16a34a);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 20px rgba(134, 239, 172, 0.4);
 }
 
 .filter-button:active {
   transform: translateY(0);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+/* Search Results Grid - Updated to match Popular Anime design */
+.search-anime-page {
+  margin-top: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Grid Container - Updated with proper scrolling */
+.box {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+  z-index: 2;
+  position: relative;
+  /* Remove any height restrictions that might cause overflow */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Anime Card - Updated to match popular-card design */
+.Animecards {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.Animecards::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.Animecards:hover::before {
+  opacity: 1;
+}
+
+.Animecards:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Image Container - Updated to match popular-img-wrapper */
+.anime-image-container {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.anime-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.Animecards:hover .anime-image {
+  transform: scale(1.1);
+}
+
+/* Gradient overlay - matches popular-img-wrapper::after */
+.anime-image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.Animecards:hover .anime-image-container::after {
+  opacity: 1;
+}
+
+/* Card Content - Updated to match popular-info */
+.anime-card-content {
+  padding: 18px;
+  position: relative;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.anime-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.anime-info {
+  margin-bottom: 12px;
+}
+
+.anime-date {
+  font-size: 0.85rem;
+  color: #facc15;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.anime-date::before {
+  content: "📅 ";
+  margin-right: 4px;
+}
+
+.anime-genre {
+  font-size: 0.85rem;
+  color: #77cf94;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.anime-extra {
+  font-size: 0.8rem;
+  color: #b8c6db;
+  opacity: 0.8;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+/* watch buton */
+.watch-btn {
+  background: linear-gradient(135deg, #ff7e7e 20%, #ffc371 80%);
+  border: none;
+  border-radius: 10px;
+  padding-left: 700px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 126, 126, 0.3);
+}
+
+.watch-btn:active {
+  transform: translateY(0);
+}
+
+/* No Results Message */
+.no-results {
+  text-align: center;
+  color: #b8c6db;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 3rem;
+  padding: 3rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.no-results::before {
+  content: "🔍";
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
 }
 
 /* Responsive Design */
@@ -187,95 +444,63 @@
     padding: 1rem;
   }
   
-  .filter-row {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .date-row {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .date-selects {
-    flex-wrap: wrap;
+  .filter-section {
+    padding: 1.5rem;
   }
   
   .filter-title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
   
-  .genre-dropdown {
-    max-width: 100%;
+  .select-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
-}
-
-@media (max-width: 480px) {
+  
+  .select-group label {
+    margin-bottom: 0.5rem;
+  }
+  
   .date-selects {
     flex-direction: column;
-    gap: 0.5rem;
   }
   
   .date-select {
     width: 100%;
+    min-width: unset;
   }
   
   .filter-button {
     width: 100%;
-    padding: 1rem;
+  }
+  
+  .box {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
   }
 }
 
-
-.genre-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.genre-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #666;
-  background: #222;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.genre-btn:hover {
-  background: #333;
-}
-
-.genre-btn.active {
-  background: #4caf50;
-  border-color: #4caf50;
-}
-
-/* AdvancePage.css */
-
-/* Wrapper for Type & Status dropdowns */
-.select-group {
-  display: flex;
-  align-items: center;
-  gap: 20px; /* ✅ adds space between Type and Status */
-  margin-bottom: 20px; /* space below the group */
-}
-
-.select-group label {
-  font-weight: bold;
-  margin-right: 8px;
-}
-
-.filter-select {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.filter-select:focus {
-  border-color: #007bff;
-  outline: none;
+@media (max-width: 480px) {
+  .filter-section {
+    padding: 1rem;
+  }
+  
+  .genre-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .box {
+    grid-template-columns: 1fr;
+    padding: 0.5rem 0;
+  }
+  
+  .anime-card-content {
+    padding: 1rem;
+  }
+  
+  .anime-title {
+    font-size: 1.1rem;
+  }
 }

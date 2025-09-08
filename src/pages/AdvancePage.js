@@ -139,6 +139,12 @@ const AdvancePage = () => {
     setResults([]); // hide results
   };
 
+  const handleAnimeClick = (animeId) => {
+    navigate(`/anime/${animeId}`, {
+      state: { backgroundLocation: location },
+    });
+  };
+
   return (
     <div className="advance-search-container">
       {showFilters && (
@@ -250,50 +256,46 @@ const AdvancePage = () => {
       )}
 
       <section className="search-anime-page">
-        <div className="search-anime-container">
+        {/* Grid Container - Named as "box" */}
+        <div className="box">
           {!showFilters && results.length > 0 ? (
             results.map((anime) => (
-              <div className="featured-card search-anime-card" key={anime.id}>
-                <div className="featured-content">
-                  {/* Anime Image */}
+              /* Anime Card - Named as "Animecards" */
+              <div className="Animecards" key={anime.id}>
+                {/* Image Container */}
+                <div className="anime-image-container">
                   <img
-                    src={anime.imageBase64 || "https://via.placeholder.com/150"}
+                    src={anime.imageBase64 || "https://via.placeholder.com/300x200"}
                     alt={anime.title || "N/A"}
-                    className="featured-img anime-image"
-                    style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      navigate(`/anime/${anime.id}`, {
-                        state: { backgroundLocation: location },
-                      })
-                    }
+                    className="anime-image"
+                    onClick={() => handleAnimeClick(anime.id)}
                   />
+                </div>
 
-                  {/* Anime Details */}
-                  <div className="featured-details1">
-                    <h3 className="anime-title">{anime.title || "N/A"}</h3>
-                    <p className="anime-date">★ {anime.releaseDate || "N/A"}</p>
+                {/* Card Content */}
+                <div className="anime-card-content">
+                  <h3 className="anime-title">{anime.title || "N/A"}</h3>
+                  
+                  <div className="anime-info">
+                    <p className="anime-date">{anime.releaseDate || "N/A"}</p>
                     <p className="anime-genre">{anime.genre || "N/A"}</p>
                     <p className="anime-extra">
                       Type: {filters.type !== "All" ? filters.type : "N/A"} | Status:{" "}
                       {filters.status !== "All" ? filters.status : "N/A"}
                     </p>
-
-                    <button
-                      className="watch-btn1"
-                      onClick={() =>
-                        navigate(`/anime/${anime.id}`, {
-                          state: { backgroundLocation: location },
-                        })
-                      }
-                    >
-                      Play Now
-                    </button>
                   </div>
+
+                  <button
+                    className="watch-btn"
+                    onClick={() => handleAnimeClick(anime.id)}
+                  >
+                    Play Now
+                  </button>
                 </div>
               </div>
             ))
           ) : (
-            !showFilters && <p>No results found</p>
+            !showFilters && <div className="no-results">No results found</div>
           )}
         </div>
       </section>

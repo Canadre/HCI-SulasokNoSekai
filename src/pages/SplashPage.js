@@ -30,14 +30,14 @@ const SplashAnime = () => {
           {/* Logo/Brand */}
           <div className="brand-section">
             <div className="brand-label">
-              SULASOK NO SEKAI
+              DOWN ANIVERSE
             </div>
             <h1 className="main-title">
               <span className="title-line">Discover</span>
               <span className="title-line">the anime</span>
               <span className="title-line gradient-text">world</span>
             </h1>
-          </div>
+          </div>  
 
           {/* Tagline */}
           <p className="tagline">

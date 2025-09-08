@@ -50,6 +50,21 @@ export default function SecondHome() {
     }
   }, [featuredList]);
 
+  // ✅ Generate floating particles
+  const generateFloatingParticles = () => {
+    return Array.from({ length: 15 }, (_, i) => (
+      <div
+        key={i}
+        className="particle"
+        style={{
+          left: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 15}s`,
+          animationDuration: `${12 + Math.random() * 8}s`
+        }}
+      />
+    ));
+  };
+
   if (loading && !fetched) {
     return (
       <div className="loading">
@@ -74,17 +89,17 @@ export default function SecondHome() {
         <section className="featured">
           {/* 🔹 Background Banner */}
           <div className="featured-banner">
-  {featuredList.map((anime, index) => (
-    <img
-      key={anime.id}
-      src={anime.featuredPhoto || "https://via.placeholder.com/150"}
-      alt={anime.title}
-      className={`featured-photo ${index === currentIndex ? "active" : ""}`}
-    />
-  ))}
+            {featuredList.map((anime, index) => (
+              <img
+                key={anime.id}
+                src={anime.featuredPhoto || "https://via.placeholder.com/150"}
+                alt={anime.title}
+                className={`featured-photo ${index === currentIndex ? "active" : ""}`}
+              />
+            ))}
 
-  <div className="featured-overlay">
-    <div className="featured-card">
+            <div className="featured-overlay">
+              <div className="featured-card">
                 <h2 className="section-title">Featured</h2>
                 <div className="featured-content">
                   {/* Poster */}
@@ -126,11 +141,23 @@ export default function SecondHome() {
       {/* ===== Separator ===== */}
       <div className="section-separator"></div>
 
-      {/* ===== Top Trends Section ===== */}
+      {/* ===== Enhanced Top Trends Section ===== */}
       <section className="trends">
+        {/* Floating Particles Background */}
+        <div className="floating-particles">
+          {generateFloatingParticles()}
+        </div>
+        
         <h2 className="section-title">Top Trends Today</h2>
         {trends.length === 0 ? (
-          <p>No trends available.</p>
+          <p style={{
+            textAlign: 'center', 
+            color: '#a0d4a0', 
+            fontSize: '1.2rem',
+            marginTop: '50px'
+          }}>
+            No trends available.
+          </p>
         ) : (
           <div className="trends-container">
             <div className="trends-row">
@@ -141,12 +168,12 @@ export default function SecondHome() {
                   onClick={() => openAnimeDetail(anime.id)}
                   style={{ cursor: "pointer" }}
                 >
-                  <div className="trend-number">#{index + 1}</div>
                   <img
                     src={anime.imageBase64 || "https://via.placeholder.com/120"}
                     alt={anime.title || "N/A"}
                     className="trend-img"
                   />
+                  <div className="trend-number">#{index + 1}</div>
                   <div className="trend-info">
                     <p className="trend-title">{anime.title || "N/A"}</p>
                     <p className="trend-genre">{anime.genre || "N/A"}</p>
